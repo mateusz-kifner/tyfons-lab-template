@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { OTPInput, OTPInputContext } from "input-otp";
-import { Dot } from "lucide-react";
+import { OTPInput, OTPInputContext, type SlotProps } from "input-otp";
+import { IconCircleDot } from "@tabler/icons-react";
 
 import { cn } from "@acme/ui";
 
@@ -35,13 +35,15 @@ const InputOTPSlot = React.forwardRef<
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext);
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[
+    index
+  ] as SlotProps;
 
   return (
     <div
       ref={ref}
       className={cn(
-        "relative flex h-10 w-10 items-center justify-center border-y border-r border-input text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
+        "relative flex h-10 w-10 items-center justify-center border-input border-y border-r text-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md",
         isActive && "z-10 ring-2 ring-ring ring-offset-background",
         className,
       )}
@@ -62,8 +64,10 @@ const InputOTPSeparator = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
+  // biome-ignore lint/a11y/useSemanticElements: <explanation>
+  // biome-ignore lint/a11y/useFocusableInteractive: <explanation>
   <div ref={ref} role="separator" {...props}>
-    <Dot />
+    <IconCircleDot />
   </div>
 ));
 InputOTPSeparator.displayName = "InputOTPSeparator";

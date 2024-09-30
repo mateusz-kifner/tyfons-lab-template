@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
-import { Check, ChevronRight, Circle } from "lucide-react";
+import { IconCheck, ChevronRight, Circle } from "@tabler/icons-react";
 
 import { cn } from "@acme/ui";
 

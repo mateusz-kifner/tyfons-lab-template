@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { IconChevronRight, IconArrowsHorizontal } from "@tabler/icons-react";
 
 import { cn } from "@acme/ui";
 
@@ -19,7 +19,7 @@ const BreadcrumbList = React.forwardRef<
   <ol
     ref={ref}
     className={cn(
-      "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5",
+      "flex flex-wrap items-center gap-1.5 break-words text-muted-foreground text-sm sm:gap-2.5",
       className,
     )}
     {...props}
@@ -61,6 +61,7 @@ const BreadcrumbPage = React.forwardRef<
   HTMLSpanElement,
   React.ComponentPropsWithoutRef<"span">
 >(({ className, ...props }, ref) => (
+  // biome-ignore lint/a11y/useFocusableInteractive: <explanation>
   <span
     ref={ref}
     role="link"
@@ -78,12 +79,13 @@ const BreadcrumbSeparator = ({
   ...props
 }: React.ComponentProps<"li">) => (
   <li
+    // biome-ignore lint/a11y/useSemanticElements: <explanation>
     role="presentation"
     aria-hidden="true"
     className={cn("[&>svg]:size-3.5", className)}
     {...props}
   >
-    {children ?? <ChevronRight />}
+    {children ?? <IconChevronRight />}
   </li>
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
@@ -93,12 +95,13 @@ const BreadcrumbEllipsis = ({
   ...props
 }: React.ComponentProps<"span">) => (
   <span
+    // biome-ignore lint/a11y/useSemanticElements: <explanation>
     role="presentation"
     aria-hidden="true"
     className={cn("flex h-9 w-9 items-center justify-center", className)}
     {...props}
   >
-    <MoreHorizontal className="h-4 w-4" />
+    <IconArrowsHorizontal className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
 );
