@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { handlers, isSecureContext } from "@acme/auth";
 
-
-
 const EXPO_COOKIE_NAME = "__acme-expo-redirect-state";
 const AUTH_COOKIE_PATTERN = /authjs\.session-token=([^;]+)/;
 
@@ -67,8 +65,7 @@ export const GET = async (
 
     if (!match)
       throw new Error(
-        "Unable to find session cookie: " +
-          JSON.stringify(authResponse.headers.getSetCookie()),
+        `Unable to find session cookie: ${JSON.stringify(authResponse.headers.getSetCookie())}`,
       );
 
     const url = new URL(isExpoCallback.value);
