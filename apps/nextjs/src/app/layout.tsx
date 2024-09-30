@@ -4,13 +4,13 @@ import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@acme/ui";
 import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
-import { Toaster } from "@acme/ui/toast";
+// import { Toaster } from "@acme/ui/toast";
 
-import { TRPCReactProvider } from "~/trpc/react";
+import { TRPCReactProvider } from "@/trpc/react";
 
-import "~/app/globals.css";
+import "@/app/globals.css";
 
-import { env } from "~/env";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -55,7 +55,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           <div className="absolute right-4 bottom-4">
             <ThemeToggle />
           </div>
-          <Toaster />
+          {/* <Toaster /> */}
         </ThemeProvider>
       </body>
     </html>

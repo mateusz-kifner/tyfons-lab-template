@@ -181,6 +181,8 @@ const DropdownMenuShortcut = ({
 };
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
+export type Checked = boolean | "indeterminate";
+
 export {
   DropdownMenu,
   DropdownMenuTrigger,
