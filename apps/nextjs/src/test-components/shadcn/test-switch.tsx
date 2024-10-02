@@ -4,7 +4,7 @@ import { Switch } from "@acme/ui/switch";
 function TestSwitch() {
   return (
     <>
-      <div className="flex flex-col items-center space-x-2">
+      <div className="flex flex-col items-center gap-2">
         <div className="flex items-center gap-2">
           <Switch id="airplane-mode" />
           <Label htmlFor="airplane-mode" label="Airplane Mode" />
