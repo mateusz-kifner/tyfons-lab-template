@@ -82,7 +82,7 @@ export function InputForm() {
 
 function TestPage() {
   return (
-    <div className="text-stone-950 bg-white">
+    <div>
       <InputForm />
     </div>
   );

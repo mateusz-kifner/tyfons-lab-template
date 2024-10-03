@@ -10,7 +10,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useColorScheme();
 
   return (
-    <div className="h-screen">
+    <div className="h-min-screen bg-background text-foreground">
       <TooltipProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TRPCReactProvider>

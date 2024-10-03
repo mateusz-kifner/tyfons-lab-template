@@ -12,18 +12,14 @@ import { Label } from "@acme/ui/label";
 
 function TestCard() {
   return (
-    <Card className="flex gap-4 bg-white p-4 dark:bg-stone-950">
+    <Card className="flex gap-4 p-4">
       <Card className="w-96">
         <CardHeader>
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
-          <img
-            src="/assets/White%20Tshirt%20-%201600x1571.png"
-            alt="test"
-            className="bg-blue-200"
-          />
+          <img src="/logo.svg" alt="test" className="bg-blue-200" />
         </CardContent>
         <CardFooter className="justify-end">
           <Button>Test</Button>

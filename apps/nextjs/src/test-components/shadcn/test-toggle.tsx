@@ -4,7 +4,7 @@ import { IconAlertCircle } from "@tabler/icons-react";
 
 function TestToggle() {
   return (
-    <Card className="bg-white p-2 dark:bg-stone-950">
+    <Card className="p-2">
       <div className="flex gap-2">
         <Toggle aria-label="Toggle italic">
           <IconAlertCircle className="h-4 w-4" />
