@@ -16,7 +16,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <TRPCReactProvider>
             <Component {...pageProps} />
           </TRPCReactProvider>
-          <div className="fixed right-4 bottom-4">{/* <ThemeToggle /> */}</div>
+          <div className="fixed right-4 bottom-4">
+            <ThemeToggle />
+          </div>
           <Toaster />
         </ThemeProvider>
       </TooltipProvider>
