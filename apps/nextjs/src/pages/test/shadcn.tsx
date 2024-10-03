@@ -24,12 +24,19 @@ const TestAspectRatio = lazy(
   () => import("@/test-components/shadcn/test-aspect-ratio"),
 );
 const TestBadge = lazy(() => import("@/test-components/shadcn/test-badge"));
+const TestBreadcrumb = lazy(
+  () => import("@/test-components/shadcn/test-breadcrumb"),
+);
 const TestButton = lazy(() => import("@/test-components/shadcn/test-button"));
+const TestCalendar = lazy(
+  () => import("@/test-components/shadcn/test-calendar"),
+);
 
 const TestCard = lazy(() => import("@/test-components/shadcn/test-card"));
 const TestCarousel = lazy(
   () => import("@/test-components/shadcn/test-carousel"),
 );
+const TestChart = lazy(() => import("@/test-components/shadcn/test-chart"));
 const TestCheckbox = lazy(
   () => import("@/test-components/shadcn/test-checkbox"),
 );
@@ -48,13 +55,24 @@ const TestDrawer = lazy(() => import("@/test-components/shadcn/test-drawer"));
 const TestDropdownMenu = lazy(
   () => import("@/test-components/shadcn/test-dropdown-menu"),
 );
+const TestForm = lazy(() => import("@/test-components/shadcn/test-form"));
 const TestHoverCard = lazy(
   () => import("@/test-components/shadcn/test-hover-card"),
 );
+const TestInputOTP = lazy(
+  () => import("@/test-components/shadcn/test-input-otp"),
+);
 const TestInput = lazy(() => import("@/test-components/shadcn/test-input"));
 const TestLabel = lazy(() => import("@/test-components/shadcn/test-label"));
+const TestMenubar = lazy(() => import("@/test-components/shadcn/test-menubar"));
+const TestNavigationMenu = lazy(
+  () => import("@/test-components/shadcn/test-navigation-menu"),
+);
 const TestPagination = lazy(
   () => import("@/test-components/shadcn/test-pagination"),
+);
+const TestPaginationPrimitive = lazy(
+  () => import("@/test-components/shadcn/test-pagination-primitive"),
 );
 const TestPopover = lazy(() => import("@/test-components/shadcn/test-popover"));
 const TestProgress = lazy(
@@ -117,9 +135,17 @@ const UIElements: {
     Element: TestBadge,
   },
   {
+    title: "Breadcrumb",
+    Element: TestBreadcrumb,
+  },
+  {
     title: "Button",
     Element: TestButton,
     className: "flex-col",
+  },
+  {
+    title: "Calendar",
+    Element: TestCalendar,
   },
   {
     title: "Card",
@@ -129,6 +155,10 @@ const UIElements: {
     title: "Carousel",
     Element: TestCarousel,
     className: "justify-center",
+  },
+  {
+    title: "Chart",
+    Element: TestChart,
   },
   {
     title: "Checkbox",
@@ -165,10 +195,20 @@ const UIElements: {
     Element: TestDropdownMenu,
     className: "justify-center",
   },
+
+  {
+    title: "Form",
+    Element: TestForm,
+  },
   {
     title: "HoverCard",
     Element: TestHoverCard,
     className: "justify-center",
+  },
+  {
+    title: "InputOTP",
+    Element: TestInputOTP,
+    className: "flex-col",
   },
   {
     title: "Input",
@@ -181,8 +221,21 @@ const UIElements: {
     className: "flex-col",
   },
   {
+    title: "Menubar",
+    Element: TestMenubar,
+  },
+  {
+    title: "NavigationMenu",
+    Element: TestNavigationMenu,
+  },
+  {
     title: "Pagination",
     Element: TestPagination,
+    className: "flex-col",
+  },
+  {
+    title: "Pagination Primitive",
+    Element: TestPaginationPrimitive,
     className: "flex-col",
   },
   {

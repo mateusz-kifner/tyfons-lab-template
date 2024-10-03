@@ -7,7 +7,7 @@ import {
 import { IconChevronsDown } from "@tabler/icons-react";
 function TestCollapsible() {
   return (
-    <Collapsible>
+    <Collapsible className="w-[350px] space-y-2">
       <div className="flex items-center justify-between space-x-4 px-4">
         <h4 className="font-semibold text-sm">
           @peduarte starred 3 repositories
