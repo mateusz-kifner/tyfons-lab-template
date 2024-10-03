@@ -9,11 +9,16 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import useColorScheme, { colorSchemes } from "./useColorScheme";
+import { useId } from "react";
 
 function ThemeToggle() {
   const { setTheme } = useTheme();
+  const { setColorScheme } = useColorScheme();
+  const uuid = useId();
 
   return (
     <DropdownMenu>
@@ -25,6 +30,15 @@ function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        {colorSchemes.map((color, index) => (
+          <DropdownMenuItem
+            key={`${uuid}:${index}`}
+            onClick={() => setColorScheme?.(color)}
+          >
+            {color}
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>

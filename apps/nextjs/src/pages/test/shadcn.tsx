@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -7,9 +8,10 @@ import {
 } from "@acme/ui/card";
 import { Suspense, lazy } from "react";
 import { cn } from "@acme/ui";
-import { IconLoader2, IconMoonStars, IconSun } from "@tabler/icons-react";
+import { IconLoader2 } from "@tabler/icons-react";
 import { type ComponentType, useId } from "react";
 import type { GetStaticProps } from "next";
+import { ThemeToggle } from "@acme/ui/theme";
 
 const TestAccordion = lazy(
   () => import("@/test-components/shadcn/test-accordion"),
@@ -263,8 +265,10 @@ const UIElements: {
 function ShadCN() {
   // const { toggleTheme, theme } = useUserContext();
   const uuid = useId();
+  console.log("test");
   return (
     <div className="mx-auto flex max-w-screen-xl flex-col gap-4 p-2 pb-96">
+      <ThemeToggle />
       {UIElements.map((val, index) => (
         <Card key={`${uuid}${index}:`}>
           <CardHeader>
@@ -284,14 +288,6 @@ function ShadCN() {
           </CardContent>
         </Card>
       ))}
-
-      {/* <Button
-        onClick={toggleTheme}
-        size="icon"
-        className="fixed right-6 bottom-6 h-14 w-14 rounded-full"
-      >
-        {theme === 1 ? <IconSun /> : <IconMoonStars />}
-      </Button> */}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
 
 import { TRPCReactProvider } from "@/trpc/react";
 
-import "@/app/globals.css";
+import "@/styles/globals.css";
 
 import { env } from "@/env";
 

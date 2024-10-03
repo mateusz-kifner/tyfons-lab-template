@@ -1,6 +1,7 @@
 import { ScrollArea } from "@acme/ui/scroll-area";
 import { lorem } from "../lorem";
 import { Separator } from "@acme/ui/separator";
+import { Fragment } from "react";
 
 const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`,
@@ -17,12 +18,10 @@ function TestScrollArea() {
         <div className="p-4">
           <h4 className="mb-4 font-medium text-sm leading-none">Tags</h4>
           {tags.map((tag, index) => (
-            <>
-              <div key={`TestScrollArea${tag}__${index}`} className="text-sm">
-                {tag}
-              </div>
+            <Fragment key={`TestScrollArea${tag}__${index}`}>
+              <div className="text-sm">{tag}</div>
               <Separator className="my-2" />
-            </>
+            </Fragment>
           ))}
         </div>
       </ScrollArea>
