@@ -20,6 +20,38 @@ function TestButton() {
           <IconAlertCircle />
         </Button>
       </div>
+      <div className="flex gap-2">
+        <Button disabled>primary</Button>
+        <Button disabled variant="secondary">
+          secondary
+        </Button>
+        <Button disabled variant="outline">
+          outline
+        </Button>
+        <Button disabled variant="ghost">
+          ghost
+        </Button>
+        <Button disabled variant="link">
+          link
+        </Button>
+      </div>
+      <div className="flex gap-2">
+        <Button disabled size="xs">
+          Size XS
+        </Button>
+        <Button disabled size="sm">
+          Size SM
+        </Button>
+        <Button disabled size="default">
+          Size default
+        </Button>
+        <Button disabled size="lg">
+          Size LG
+        </Button>
+        <Button disabled size="icon">
+          <IconAlertCircle />
+        </Button>
+      </div>
     </>
   );
 }

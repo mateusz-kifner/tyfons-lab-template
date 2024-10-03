@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { IconChevronRight, IconArrowsHorizontal } from "@tabler/icons-react";
+import { IconChevronRight, IconDots } from "@tabler/icons-react";
 
 import { cn } from "@acme/ui";
 
@@ -101,7 +101,7 @@ const BreadcrumbEllipsis = ({
     className={cn("flex h-9 w-9 items-center justify-center", className)}
     {...props}
   >
-    <IconArrowsHorizontal className="h-4 w-4" />
+    <IconDots className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
 );

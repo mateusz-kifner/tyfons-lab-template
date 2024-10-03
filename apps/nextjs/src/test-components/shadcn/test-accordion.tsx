@@ -9,7 +9,7 @@ import { lorem } from "../lorem";
 
 function TestAccordion() {
   return (
-    <Card className="w-full bg-white p-2 dark:bg-stone-950">
+    <Card className="w-full p-2">
       <Accordion type="multiple" className="w-full">
         <AccordionItem value="item-1">
           <AccordionTrigger>Test</AccordionTrigger>
