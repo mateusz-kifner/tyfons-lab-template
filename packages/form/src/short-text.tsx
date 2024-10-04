@@ -1,48 +1,50 @@
-import type { CSSProperties } from "react";
-import type { LiveFormInputType } from "./input-type";
+import { forwardRef, type CSSProperties, type ReactNode } from "react";
+import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
+import type { UseFormRegister } from "react-hook-form";
+import { cn } from "@acme/ui";
 
-interface LiveFormShortTextProps extends LiveFormInputType<string> {
-  maxLength?: number;
+interface FormShortTextProps
+  extends FormInputType<string>,
+    UseFormRegister<any> {
   style?: CSSProperties;
 }
-const LiveFormShortText = (props: LiveFormShortTextProps) => {
-  const {
-    label,
-    value,
-    onSubmit,
-    disabled,
-    required,
-    maxLength,
-    style,
-    className,
-    leftSection,
-    rightSection,
+const LiveFormShortText = forwardRef<HTMLInputElement, FormShortTextProps>(
+  (props, ref) => {
+    const {
+      label,
+      disabled,
+      required,
+      style,
+      className,
+      leftSection,
+      rightSection,
+      ...moreProps
+    } = props;
 
-    keyName,
-    ...moreProps
-  } = props;
-
-  return (
-    <div>
-      <Label
-        label={label}
-        // copyValue={value}
-        // required={required}
-      />
-      <input
-        type="text"
-        value={value}
-        // onChange={(e) => onSubmit?.(e.target.value)}
-        disabled={disabled}
-        required={required}
-        maxLength={maxLength}
-        style={style}
-        className={className}
-      />
-    </div>
-  );
-};
+    return (
+      <div style={style} className={cn("", className)}>
+        <Label
+          label={label}
+          // copyValue={value}
+          // required={required}
+        />
+        <div className="flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+          {!!leftSection && leftSection}
+          <input
+            type="text"
+            disabled={disabled}
+            required={required}
+            className="flex w-full  bg-transparent text-sm outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none"
+            ref={ref}
+            {...moreProps}
+          />
+          {!!rightSection && rightSection}
+        </div>
+      </div>
+    );
+  },
+);
 
 // import {
 //   useEffect,
