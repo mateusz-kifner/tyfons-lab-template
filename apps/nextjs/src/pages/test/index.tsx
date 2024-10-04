@@ -1,10 +1,3 @@
-"use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@acme/ui/button";
 import {
   Form,
   FormControl,
@@ -14,24 +7,32 @@ import {
   FormLabel,
   FormMessage,
 } from "@acme/ui/form";
+
+import {
+  useForm,
+  useController,
+  type UseControllerProps,
+} from "react-hook-form";
+import { z } from "zod";
+
 import { Input } from "@acme/ui/input";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
+import { Button } from "@acme/ui/button";
+import LiveFormShortText from "@acme/form/short-text";
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  username: z.string().optional(),
+  arr: z.array(z.string()).optional().nullable(),
 });
 
-export function InputForm({
-  initialData,
-}: { initialData?: { username: string } }) {
-  const [data, setData] = useState({ username: "shadcn" });
-  const [count, setCount] = useState(0);
+function TestPage() {
+  const [data, setData] = useState<z.infer<typeof FormSchema>>({
+    arr: ["1", "2", "3"],
+  });
   const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+    // resolver: zodResolver(FormSchema),
     values: data,
     mode: "all",
     reValidateMode: "onChange",
@@ -53,7 +54,6 @@ export function InputForm({
       ),
     });
   }, [dataDebounced]);
-
   return (
     <div>
       <Form {...form}>
@@ -64,41 +64,10 @@ export function InputForm({
             form.handleSubmit(onSubmit)(e);
           }}
         >
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <LiveFormShortText {...form.register("username")} />
           <Button type="submit">Submit</Button>
         </form>
       </Form>
-      <Button
-        onClick={() => {
-          setData({ username: `tyfon${count}` });
-          setCount((v) => v + 1);
-        }}
-      >
-        change
-      </Button>
-    </div>
-  );
-}
-
-function TestPage() {
-  return (
-    <div>
-      <InputForm initialData={{ username: "shadcn" }} />
     </div>
   );
 }

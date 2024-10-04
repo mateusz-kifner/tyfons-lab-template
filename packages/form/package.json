@@ -1,5 +1,5 @@
 {
-  "name": "@acme/live-form",
+  "name": "@acme/form",
   "private": true,
   "version": "0.1.0",
   "type": "module",
