@@ -15,7 +15,9 @@ import {
   FormMessage,
 } from "@acme/ui/form";
 import { Input } from "@acme/ui/input";
-import { useEffect } from "react";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { useDebouncedValue } from "@mantine/hooks";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -23,67 +25,80 @@ const FormSchema = z.object({
   }),
 });
 
-export function InputForm() {
+export function InputForm({
+  initialData,
+}: { initialData?: { username: string } }) {
+  const [data, setData] = useState({ username: "shadcn" });
+  const [count, setCount] = useState(0);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
+    values: data,
     mode: "all",
     reValidateMode: "onChange",
   });
-
-  useEffect(() => {
-    console.log(form);
-  }, []);
+  const [dataDebounced] = useDebouncedValue(data, 500);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(JSON.stringify(data, null, 2));
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
+    setData(data);
   }
 
+  useEffect(() => {
+    toast("Submitted:", {
+      description: (
+        <pre className="mt-2 w-[332px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            {JSON.stringify(dataDebounced, null, 2)}
+          </code>
+        </pre>
+      ),
+    });
+  }, [dataDebounced]);
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-2/3 space-y-6"
-        onChange={(e) => {
-          form.handleSubmit(console.log)(e);
+    <div>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6"
+          onChange={(e) => {
+            form.handleSubmit(onSubmit)(e);
+          }}
+        >
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      <Button
+        onClick={() => {
+          setData({ username: `tyfon${count}` });
+          setCount((v) => v + 1);
         }}
       >
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+        change
+      </Button>
+    </div>
   );
 }
 
 function TestPage() {
   return (
     <div>
-      <InputForm />
+      <InputForm initialData={{ username: "shadcn" }} />
     </div>
   );
 }
