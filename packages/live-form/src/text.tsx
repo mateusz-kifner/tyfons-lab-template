@@ -6,21 +6,21 @@ import {
   type CSSProperties,
   useLayoutEffect,
 } from "react";
-import DisplayCellExpanding from "@shirterp/ui-web/DisplayCellExpanding";
+import DisplayCellExpanding from "@acme/ui/DisplayCellExpanding";
 import preventLeave from "@/utils/preventLeave";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
 import inputFocusAtEndOfLine from "@/utils/inputFocusAtEndOfLine";
 import { useClickOutside } from "@mantine/hooks";
-import { useEditableContext } from "./Editable";
-import { cn } from "@/utils/cn";
+import { useLiveFormContext } from "./LiveForm";
+import { cn } from "@acme/ui";
 
-interface EditableTextProps extends EditableInput<string> {
+interface LiveFormTextProps extends LiveFormInput<string> {
   maxLength?: number;
   style?: CSSProperties;
 }
 
-const EditableText = (props: EditableTextProps) => {
+const LiveFormText = (props: LiveFormTextProps) => {
   const {
     data,
 
@@ -36,7 +36,7 @@ const EditableText = (props: EditableTextProps) => {
     rightSection,
     style,
     ...moreProps
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const uuid = useId();
   const [text, setText] = useState<string>(value ?? "");
   const [focus, setFocus] = useState<boolean>(false);
@@ -150,4 +150,4 @@ const EditableText = (props: EditableTextProps) => {
   );
 };
 
-export default EditableText;
+export default LiveFormText;

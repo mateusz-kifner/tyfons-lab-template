@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-export default dynamic(() => import("./EditableRichTextSSR"), {
+export default dynamic(() => import("./LiveFormRichTextSSR"), {
   // Disable during server side rendering
   ssr: false,
 

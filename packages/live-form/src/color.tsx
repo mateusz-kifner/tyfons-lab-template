@@ -5,22 +5,18 @@ import { useClickOutside } from "@mantine/hooks";
 import colorNames from "@/utils/color-names.json";
 import preventLeave from "@/utils/preventLeave";
 
-import { buttonVariants } from "@shirterp/ui-web/Button";
-import InputColor from "@shirterp/ui-web/ColorPicker/InputColor";
-import DisplayCell from "@shirterp/ui-web/DisplayCell";
-import { Label } from "@shirterp/ui-web/Label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@shirterp/ui-web/Popover";
-import type EditableInput from "@/types/EditableInput";
-import { cn } from "@/utils/cn";
+import { buttonVariants } from "@acme/ui/button";
+import InputColor from "@acme/ui/ColorPicker/InputColor";
+import DisplayCell from "@acme/ui/DisplayCell";
+import { Label } from "@acme/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
+import type LiveFormInput from "./input-type";
+import { cn } from "@acme/ui";
 import equalHSV from "@/utils/equalHSV";
 import inputFocusAtEndOfLine from "@/utils/inputFocusAtEndOfLine";
 import { IconColorSwatch } from "@tabler/icons-react";
 import tinycolor, { type ColorFormats } from "tinycolor2";
-import { useEditableContext } from "./Editable";
+import { useLiveFormContext } from "./live-form";
 
 // Scroll in color palette will not work in modal due to radix bug (25.05.2023)
 
@@ -64,11 +60,11 @@ export const getColorNameFromHex = (hex: string) => {
   return name;
 };
 
-interface EditableColorProps extends EditableInput<string> {
+interface LiveFormColorProps extends LiveFormInput<string> {
   style?: CSSProperties;
 }
 
-const EditableColor = (props: EditableColorProps) => {
+const LiveFormColor = (props: LiveFormColorProps) => {
   const {
     label,
     value,
@@ -79,7 +75,7 @@ const EditableColor = (props: EditableColorProps) => {
     leftSection,
     rightSection,
     // keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const uuid = useId();
   const [colorText, setColorText] = useState<string | null>(
     !!value && value.length > 3 ? value : null,
@@ -234,4 +230,4 @@ const EditableColor = (props: EditableColorProps) => {
   );
 };
 
-export default EditableColor;
+export default LiveFormColor;

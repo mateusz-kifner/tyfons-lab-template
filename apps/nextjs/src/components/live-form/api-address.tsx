@@ -1,11 +1,14 @@
-import DisplayCellExpanding from "@shirterp/ui-web/DisplayCellExpanding";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
+import DisplayCellExpanding from "@acme/ui/DisplayCellExpanding";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
 import type { Address } from "@/server/api/address/validator";
-import EditableEnum from "./EditableEnum";
-import Editable, { type Key, useEditableContext } from "./Editable";
-import EditableText from "./EditableText";
-import { cn } from "@/utils/cn";
+import LiveFormEnum from "@acme/live-form/enum";
+import LiveForm, {
+  type Key,
+  useLiveFormContext,
+} from "@acme/live-form/live-form";
+import LiveFormText from "@acme/live-form/text";
+import { cn } from "@acme/ui";
 import useTranslation from "@/hooks/useTranslation";
 import {
   Dialog,
@@ -13,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@shirterp/ui-web/Dialog";
+} from "@acme/ui/dialog";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { useClickOutside } from "@mantine/hooks";
 import { useLoaded } from "@/hooks/useLoaded";
@@ -21,7 +24,7 @@ import api from "@/hooks/api";
 import { getQueryKey } from "@trpc/react-query";
 import { trpc } from "@/utils/trpc";
 import { useQueryClient } from "@tanstack/react-query";
-import { addressToString } from "@shirterp/server/api/address/utils";
+import { addressToString } from "@acme/live-form/utils";
 import { useFlag } from "@/hooks/useFlag";
 
 export const provinces = [
@@ -43,11 +46,11 @@ export const provinces = [
   "zachodniopomorskie",
 ];
 
-interface EditableAddressProps extends EditableInput<number> {
+interface LiveFormAddressProps extends LiveFormInput<number> {
   maxLength?: number;
 }
 
-function EditableAddressContent(props: {
+function LiveFormAddressContent(props: {
   enumOpen?: boolean;
   setEnumOpen?: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -56,41 +59,41 @@ function EditableAddressContent(props: {
 
   return (
     <div className="flex flex-grow flex-col gap-2 pb-3">
-      <EditableText
+      <LiveFormText
         label={t.streetName}
         keyName="streetName"
         className="text-stone-800 dark:text-stone-200"
       />
       <div className="flex flex-grow gap-2">
-        <EditableText
+        <LiveFormText
           label={t.streetNumber}
           keyName="streetNumber"
           className="text-stone-800 dark:text-stone-200"
         />
-        <EditableText
+        <LiveFormText
           label={t.apartmentNumber}
           keyName="apartmentNumber"
           className="text-stone-800 dark:text-stone-200"
         />
       </div>
-      <EditableText
+      <LiveFormText
         label={t.secondLine}
         keyName="secondLine"
         className="text-stone-800 dark:text-stone-200"
       />
-      <EditableText
+      <LiveFormText
         label={t.postCode}
         keyName="postCode"
         className="text-stone-800 dark:text-stone-200"
       />
-      <EditableText
+      <LiveFormText
         label={t.city}
         keyName="city"
         className="text-stone-800 dark:text-stone-200"
       />
       <div className="flex flex-grow flex-col">
         <Label label={t.province} />
-        <EditableEnum
+        <LiveFormEnum
           keyName="province"
           enum_data={provinces}
           open={enumOpen}
@@ -101,7 +104,7 @@ function EditableAddressContent(props: {
   );
 }
 
-function EditableAddressExtend(props: EditableInput<Address>) {
+function LiveFormAddressExtend(props: LiveFormInput<Address>) {
   const {
     label,
     value,
@@ -141,7 +144,7 @@ function EditableAddressExtend(props: EditableInput<Address>) {
         focus={focus}
       >
         {focus ? (
-          <EditableAddressContent
+          <LiveFormAddressContent
             enumOpen={enumOpen}
             setEnumOpen={setEnumOpen}
           />
@@ -153,7 +156,7 @@ function EditableAddressExtend(props: EditableInput<Address>) {
   );
 }
 
-function EditableAddressAlwaysVisible(props: EditableInput<Address>) {
+function LiveFormAddressAlwaysVisible(props: LiveFormInput<Address>) {
   const {
     label,
     value,
@@ -180,17 +183,17 @@ function EditableAddressAlwaysVisible(props: EditableInput<Address>) {
         leftSection={!focus && leftSection}
         rightSection={rightSection}
       >
-        <EditableAddressContent />
+        <LiveFormAddressContent />
       </DisplayCellExpanding>
     </div>
   );
 }
 
-interface EditableAddress2Props extends EditableInput<Address> {
+interface LiveFormAddress2Props extends LiveFormInput<Address> {
   maxLength?: number;
 }
 
-const EditableAddressPopover = (props: EditableAddress2Props) => {
+const LiveFormAddressPopover = (props: LiveFormAddress2Props) => {
   const {
     label,
     value,
@@ -231,14 +234,14 @@ const EditableAddressPopover = (props: EditableAddress2Props) => {
               <DialogTitle>{props.label}</DialogTitle>
             </DialogHeader>
           )}
-          <EditableAddressContent />
+          <LiveFormAddressContent />
         </DialogContent>
       </Dialog>
     </div>
   );
 };
 
-const EditableAddress = (props: EditableAddressProps) => {
+const LiveFormAddress = (props: LiveFormAddressProps) => {
   const { flags } = useFlag("root");
   const {
     label,
@@ -250,7 +253,7 @@ const EditableAddress = (props: EditableAddressProps) => {
     leftSection,
     rightSection,
     keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const isLoaded = useLoaded();
   const queryClient = useQueryClient();
   const { data, refetch } = api.address.useGetById(value ?? null);
@@ -300,17 +303,17 @@ const EditableAddress = (props: EditableAddressProps) => {
     );
   }
 
-  let ModeElement = EditableAddressPopover;
-  if (flags?.editable_address_mode === "always_visible")
-    ModeElement = EditableAddressAlwaysVisible;
-  if (flags?.editable_address_mode === "extend")
-    ModeElement = EditableAddressExtend;
+  let ModeElement = LiveFormAddressPopover;
+  if (flags?.LiveForm_address_mode === "always_visible")
+    ModeElement = LiveFormAddressAlwaysVisible;
+  if (flags?.LiveForm_address_mode === "extend")
+    ModeElement = LiveFormAddressExtend;
 
   return (
-    <Editable onSubmit={apiUpdate} data={data}>
+    <LiveForm onSubmit={apiUpdate} data={data}>
       <ModeElement label={label} value={data} />
-    </Editable>
+    </LiveForm>
   );
 };
 
-export default EditableAddress;
+export default LiveFormAddress;

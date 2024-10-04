@@ -1,24 +1,21 @@
-import type EditableInput from "@/types/EditableInput";
+import type LiveFormInput from "./live-form";
 import { useId, useRef, useState } from "react";
-import { useEditableContext } from "./Editable";
-import { Label } from "@shirterp/ui-web/Label";
+import { useLiveFormContext } from "./LiveForm";
+import { Label } from "@acme/ui/label";
 import { IconX } from "@tabler/icons-react";
 
-import { Badge } from "@shirterp/ui-web/Badge";
-import { Command, CommandGroup, CommandItem } from "@shirterp/ui-web/Command";
+import { Badge } from "@acme/ui/badge";
+import { Command, CommandGroup, CommandItem } from "@acme/ui/command";
 import { CommandInput as CommandPrimitiveInput } from "cmdk";
-import { trpc } from "@/utils/trpc";
+import { ScrollArea } from "@acme/ui/scroll-area";
 
-// TODO: add multiselect groups
-
-interface EditableMultiSelectGroupProps extends EditableInput<string[]> {
+interface LiveFormMultiSelectProps extends LiveFormInput<string[]> {
   enumData?: string[];
-  entryCategory?: string;
   collapse?: boolean;
   freeInput?: boolean;
 }
 
-function EditableMultiSelectGroup(props: EditableMultiSelectGroupProps) {
+function LiveFormMultiSelect(props: LiveFormMultiSelectProps) {
   const {
     enumData,
     label,
@@ -35,21 +32,20 @@ function EditableMultiSelectGroup(props: EditableMultiSelectGroupProps) {
     leftSection,
 
     data,
-    entryCategory,
     freeInput,
     ...moreProps
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   console.log(value);
   const uuid = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-  // const [selected, setSelected] = useState<string[]>();
+
   const selected = value ?? [];
+  // (globalPropertiesData !== undefined && globalPropertiesData.length > 0
+  //   ? globalPropertiesData[0]?.data
+  //   : value) ?? [];
   const setSelected = (data: string[]) => onSubmit(data);
   const [inputValue, setInputValue] = useState("");
-
-  const { data: globalPropertiesData } =
-    useApiGlobalPropertyGetByCategory(entryCategory);
 
   const handleUnselect = (enum_string: string) => {
     console.log(enum_string, selected);
@@ -67,7 +63,7 @@ function EditableMultiSelectGroup(props: EditableMultiSelectGroupProps) {
           setSelected(newSelected);
         }
       }
-      // This is not a default behavior of the <input /> field
+      // This is not a default behaviour of the <input /> field
       if (e.key === "Escape") {
         input.blur();
       }
@@ -138,44 +134,46 @@ function EditableMultiSelectGroup(props: EditableMultiSelectGroupProps) {
         <div className="relative mt-2">
           {open && (selectables.length > 0 || freeInput) ? (
             <div className="absolute top-0 z-10 w-full animate-in rounded-md border bg-popover text-popover-foreground shadow-md outline-none">
-              <CommandGroup className="h-full overflow-auto">
-                {freeInput &&
-                inputValue.length > 0 &&
-                !selected.includes(inputValue) ? (
-                  <CommandItem
-                    key={`${uuid}freeinput:`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onSelect={(_v) => {
-                      setSelected([...selected, inputValue]);
-                      setInputValue("");
-                    }}
-                    className={"cursor-pointer"}
-                  >
-                    {inputValue}
-                  </CommandItem>
-                ) : null}
-                {selectables.map((s, index) => {
-                  return (
+              <ScrollArea className="max-h-60">
+                <CommandGroup className="h-full overflow-auto">
+                  {freeInput &&
+                  inputValue.length > 0 &&
+                  !selected.includes(inputValue) ? (
                     <CommandItem
-                      key={`${uuid}${s}:${index}`}
+                      key={`${uuid}freeinput:`}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                       }}
                       onSelect={(_v) => {
+                        setSelected([...selected, inputValue]);
                         setInputValue("");
-                        setSelected([...selected, s]);
                       }}
                       className={"cursor-pointer"}
                     >
-                      {s}
+                      {inputValue}
                     </CommandItem>
-                  );
-                })}
-              </CommandGroup>
+                  ) : null}
+                  {selectables.map((s, index) => {
+                    return (
+                      <CommandItem
+                        key={`${uuid}${s}:${index}`}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                        onSelect={(_v) => {
+                          setInputValue("");
+                          setSelected([...selected, s]);
+                        }}
+                        className={"cursor-pointer"}
+                      >
+                        {s}
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              </ScrollArea>
             </div>
           ) : null}
         </div>
@@ -184,9 +182,4 @@ function EditableMultiSelectGroup(props: EditableMultiSelectGroupProps) {
   );
 }
 
-export default EditableMultiSelectGroup;
-function useApiGlobalPropertyGetByCategory(entryCategory: string | undefined): {
-  data: any;
-} {
-  throw new Error("Function not implemented.");
-}
+export default LiveFormMultiSelect;

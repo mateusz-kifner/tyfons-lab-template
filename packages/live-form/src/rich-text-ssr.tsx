@@ -21,10 +21,10 @@ import StarterKit from "@tiptap/starter-kit";
 
 import preventLeave from "@/utils/preventLeave";
 
-import Button from "@shirterp/ui-web/Button";
-import DisplayCellExpanding from "@shirterp/ui-web/DisplayCellExpanding";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
+import { Button } from "@acme/ui/button";
+import DisplayCellExpanding from "@acme/ui/DisplayCellExpanding";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
 import {
   IconAlignCenter,
   IconAlignJustified,
@@ -47,7 +47,7 @@ import {
   IconSuperscript,
   IconUnderline,
 } from "@tabler/icons-react";
-import { useEditableContext } from "./Editable";
+import { useLiveFormContext } from "./LiveForm";
 
 // TODO: refactor buttons rendering
 
@@ -230,11 +230,11 @@ const controls: (
 
 const turndownService = new TurndownService();
 
-interface EditableRichTextProps extends EditableInput<string> {
+interface LiveFormRichTextProps extends LiveFormInput<string> {
   maxLength?: number;
 }
 
-const EditableRichText = (props: EditableRichTextProps) => {
+const LiveFormRichText = (props: LiveFormRichTextProps) => {
   const {
     label,
     value,
@@ -245,7 +245,7 @@ const EditableRichText = (props: EditableRichTextProps) => {
     rightSection,
     // maxLength = Number.MAX_SAFE_INTEGER,
     // keyName
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const uuid = useId();
   const [text, setText] = useState<string>(
     value ? DOMPurify.sanitize(value) : "",
@@ -439,4 +439,4 @@ const EditableRichText = (props: EditableRichTextProps) => {
   );
 };
 
-export default EditableRichText;
+export default LiveFormRichText;

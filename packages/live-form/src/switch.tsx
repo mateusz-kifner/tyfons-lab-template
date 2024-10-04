@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { Switch } from "@shirterp/ui-web/Switch";
+import { Switch } from "@acme/ui/switch";
 import { useHover } from "@mantine/hooks";
 
-import type EditableInput from "@/types/EditableInput";
-import { useEditableContext } from "./Editable";
+import type LiveFormInput from "./live-form";
+import { useLiveFormContext } from "./LiveForm";
 import { type VariantProps, cva } from "class-variance-authority";
 
 // FIXME: respect disabled state
 // TODO: center text on button and add color variant
 
-// EditableInput<T> {
+// LiveFormInput<T> {
 //   label?: string;
 //   value?: T;
 //   onSubmit?: (value: T | null) => void | boolean;
@@ -21,14 +21,14 @@ import { type VariantProps, cva } from "class-variance-authority";
 //   className?: string;
 // }
 
-interface EditableSwitchProps
-  extends EditableInput<boolean>,
-    VariantProps<typeof editableSwitchVariants> {
+interface LiveFormSwitchProps
+  extends LiveFormInput<boolean>,
+    VariantProps<typeof LiveFormSwitchVariants> {
   stateLabels?: { checked: string; unchecked: string };
   stateColors?: { checked: string; unchecked: string };
 }
 
-const editableSwitchVariants = cva(
+const LiveFormSwitchVariants = cva(
   "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
@@ -44,7 +44,7 @@ const editableSwitchVariants = cva(
   },
 );
 
-const EditableSwitch = (props: EditableSwitchProps) => {
+const LiveFormSwitch = (props: LiveFormSwitchProps) => {
   const {
     label,
     value,
@@ -57,7 +57,7 @@ const EditableSwitch = (props: EditableSwitchProps) => {
     leftSection,
     variant,
     // keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
 
   // const switchRef = useRef(null);
   const [bool, setBool] = useState<boolean>(value ?? false);
@@ -93,10 +93,10 @@ const EditableSwitch = (props: EditableSwitchProps) => {
         />
       ) : (
         <div
-          className={editableSwitchVariants({
+          className={LiveFormSwitchVariants({
             variant,
           })}
-          data-state={value ?? false ? "checked" : "unchecked"}
+          data-state={(value ?? false) ? "checked" : "unchecked"}
         >
           {bool ? stateLabels.checked : stateLabels.unchecked}
         </div>
@@ -113,4 +113,4 @@ const EditableSwitch = (props: EditableSwitchProps) => {
   );
 };
 
-export default EditableSwitch;
+export default LiveFormSwitch;

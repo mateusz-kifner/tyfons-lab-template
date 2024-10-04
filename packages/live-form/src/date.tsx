@@ -4,28 +4,24 @@ import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 
-import DisplayCell from "@shirterp/ui-web/DisplayCell";
+import DisplayCell from "@acme/ui/DisplayCell";
 
-import Button from "@shirterp/ui-web/Button";
-import { Label } from "@shirterp/ui-web/Label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@shirterp/ui-web/Popover";
-import type EditableInput from "@/types/EditableInput";
+import { Button } from "@acme/ui/button";
+import { Label } from "@acme/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
+import type LiveFormInput from "./input-type";
 import inputFocusAtEndOfLine from "@/utils/inputFocusAtEndOfLine";
 import { IconCalendar } from "@tabler/icons-react";
 import Calendar from "react-calendar";
-import { useEditableContext } from "./Editable";
+import { useLiveFormContext } from "./LiveForm";
 
-type InputDateProps = EditableInput<Date>;
+type InputDateProps = LiveFormInput<Date>;
 
 // TODO : refactor dates to use string date
 // TODO : fix date value
 // FIXME: reduce excessive updates
 
-const EditableDate = (props: InputDateProps) => {
+const LiveFormDate = (props: InputDateProps) => {
   const {
     label,
     value,
@@ -35,7 +31,7 @@ const EditableDate = (props: InputDateProps) => {
     leftSection,
     rightSection,
     // keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const uuid = useId();
   const router = useRouter();
   const [focus, setFocus] = useState<boolean>(false);
@@ -160,4 +156,4 @@ const EditableDate = (props: InputDateProps) => {
   );
 };
 
-export default EditableDate;
+export default LiveFormDate;

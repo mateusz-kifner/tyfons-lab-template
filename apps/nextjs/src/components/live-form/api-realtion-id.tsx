@@ -5,19 +5,19 @@ import { IconExternalLink, IconTrashX } from "@tabler/icons-react";
 import _ from "lodash";
 import Link from "next/link";
 
-import Button, { buttonVariants } from "@shirterp/ui-web/Button";
+import Button, { buttonVariants } from "@acme/ui/button";
 import useTranslation from "@/hooks/useTranslation";
 
-import { Dialog, DialogContent, DialogTrigger } from "@shirterp/ui-web/Dialog";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
-import { cn } from "@/utils/cn";
+import { Dialog, DialogContent, DialogTrigger } from "@acme/ui/dialog";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
+import { cn } from "@acme/ui";
 import ApiList from "../ApiList";
-import { useEditableContext } from "./Editable";
+import { useLiveFormContext } from "../../../../../packages/live-form/src/LiveForm";
 import { trpc } from "@/utils/trpc";
 import navigationData from "../layout/Navigation/navigationData";
 
-interface EditableApiEntryProps<T> extends EditableInput<number | null> {
+interface LiveFormApiEntryProps<T> extends LiveFormInput<number | null> {
   entryName: string;
   // Element: React.ElementType;
   copyProvider?: (value: T | null) => string | undefined;
@@ -28,8 +28,8 @@ interface EditableApiEntryProps<T> extends EditableInput<number | null> {
   allowClear?: boolean;
 }
 
-const EditableApiEntry = <T extends Record<string, any>>(
-  props: EditableApiEntryProps<T>,
+const LiveFormApiEntry = <T extends Record<string, any>>(
+  props: LiveFormApiEntryProps<T>,
 ) => {
   const {
     label,
@@ -47,7 +47,7 @@ const EditableApiEntry = <T extends Record<string, any>>(
     allowClear,
 
     keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
 
   const { data, refetch } = trpc[entryName as "customer"].getById.useQuery(
     value as number,
@@ -205,4 +205,4 @@ const EditableApiEntry = <T extends Record<string, any>>(
   );
 };
 
-export default EditableApiEntry;
+export default LiveFormApiEntry;

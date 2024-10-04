@@ -1,3 +1,4 @@
+import { useClickOutside } from "@mantine/hooks";
 import {
   useEffect,
   useId,
@@ -7,73 +8,103 @@ import {
   useLayoutEffect,
 } from "react";
 
-import preventLeave from "@/utils/preventLeave";
-
-import DisplayCell from "@shirterp/ui-web/DisplayCell";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
+import DisplayCell from "@acme/ui/DisplayCell";
+import { Label } from "@acme/ui/label";
+import { useLoaded } from "@/hooks/useLoaded";
+import type LiveFormInput from "./live-form";
 import inputFocusAtEndOfLine from "@/utils/inputFocusAtEndOfLine";
-import { useClickOutside } from "@mantine/hooks";
-import { useEditableContext } from "./Editable";
-import { cn } from "@/utils/cn";
+import preventLeave from "@/utils/preventLeave";
+import { useLiveFormContext } from "./LiveForm";
+import { cn } from "@acme/ui";
 
-interface EditableShortTextProps extends EditableInput<string> {
+const isNumRegex = /^[\d|\+|\.|\,]+$/;
+
+interface LiveFormNumberProps extends LiveFormInput<number> {
   maxLength?: number;
   style?: CSSProperties;
+  increment?: number;
+  fixed?: number;
+  min?: number;
+  max?: number;
 }
 
-const EditableShortText = (props: EditableShortTextProps) => {
+const LiveFormNumber = (props: LiveFormNumberProps) => {
   const {
     label,
     value,
     onSubmit,
     disabled,
     required,
-    maxLength,
+    maxLength = Number.MAX_SAFE_INTEGER,
     style,
     className,
     leftSection,
     rightSection,
+    increment = 0.01,
+    min = Number.MIN_SAFE_INTEGER,
+    max = Number.MAX_SAFE_INTEGER,
+    fixed = 2,
 
     keyName,
+
+    data,
     ...moreProps
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const uuid = useId();
-  const [text, setText] = useState<string>(value ?? "");
+  const toText = (num?: number | null) => {
+    if (num === null) return "";
+    if (num === undefined) return "";
+    if (Number.isNaN(num)) return "";
+    return Number(num).toFixed(fixed); // no idea why this conversion is nesesery TODO: investigate missing toFixed on 'number'
+  };
+  const [text, setText] = useState<string>(toText(value));
+  const isLoaded = useLoaded();
   const [focus, setFocus] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
   const InputRef = useRef<HTMLInputElement>(null);
   const outerRef = useClickOutside(() => setFocus(false));
   const onFocus = () => !disabled && setFocus(true);
+
+  const onSubmitValue = (text: string) => {
+    if (!isLoaded) return;
+    const num = Number.parseFloat(text);
+    if (Number.isNaN(num)) {
+      if (!Number.isNaN(value ?? Number.NaN)) {
+        onSubmit?.(undefined);
+      }
+    } else if (num !== value) {
+      onSubmit?.(num);
+    }
+  };
 
   useEffect(() => {
     if (focus) {
       inputFocusAtEndOfLine(InputRef);
       window.addEventListener("beforeunload", preventLeave);
     } else {
-      if (text !== (value ?? "")) {
-        onSubmit?.(text);
-      }
+      onSubmitValue(text);
       window.removeEventListener("beforeunload", preventLeave);
     }
   }, [focus]);
 
   useLayoutEffect(() => {
     return () => {
-      if (text !== (value ?? "")) {
-        onSubmit?.(text);
-      }
+      onSubmitValue(text);
       window.removeEventListener("beforeunload", preventLeave);
     };
   }, []);
 
   useEffect(() => {
-    const new_value = value ?? "";
-    setText(new_value);
+    if (Number.parseFloat(text) !== value) {
+      const new_value = toText(value);
+      setText(new_value);
+    }
   }, [value]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!(maxLength && e.target.value.length > maxLength)) {
-      setText(e.target.value);
+    if (e.target.value.length < maxLength) {
+      setText(e.target.value.replace(",", "."));
+      setError(!isNumRegex.test(e.target.value));
     }
   };
 
@@ -83,6 +114,18 @@ const EditableShortText = (props: EditableShortTextProps) => {
         e.preventDefault();
         (e.target as HTMLInputElement).blur();
         setFocus(false);
+      }
+      if (e.code === "ArrowUp") {
+        const multiplier = e.ctrlKey ? 100 : e.shiftKey ? 10 : 1;
+        setText((val) =>
+          (Number.parseFloat(val) + increment * multiplier).toFixed(fixed),
+        );
+      }
+      if (e.code === "ArrowDown") {
+        const multiplier = e.ctrlKey ? 100 : e.shiftKey ? 10 : 1;
+        setText((val) =>
+          (Number.parseFloat(val) - increment * multiplier).toFixed(fixed),
+        );
       }
     }
   };
@@ -100,8 +143,8 @@ const EditableShortText = (props: EditableShortTextProps) => {
         leftSection={leftSection}
         rightSection={rightSection}
         focus={focus}
+        error={error}
         disabled={disabled}
-        className={className}
       >
         <input
           id={`short_text_${uuid}`}
@@ -127,4 +170,4 @@ const EditableShortText = (props: EditableShortTextProps) => {
   );
 };
 
-export default EditableShortText;
+export default LiveFormNumber;

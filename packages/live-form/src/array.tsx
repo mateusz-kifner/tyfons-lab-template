@@ -7,23 +7,22 @@ import {
   useId,
   useState,
 } from "react";
-import { useEditableContextWithoutOverride } from "./Editable";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
-import Button from "@shirterp/ui-web/Button";
+import { useLiveFormContextWithoutOverride } from "./live-form";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./input-type";
+import { Button } from "@acme/ui/button";
 import { IconPlus, IconTrashX } from "@tabler/icons-react";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@shirterp/ui-web/ContextMenu";
+} from "@acme/ui/context-menu";
 import useTranslation from "@/hooks/useTranslation";
 import { useListState } from "@mantine/hooks";
-import { Card, CardContent } from "@shirterp/ui-web/Card";
-import DisplayCell from "@shirterp/ui-web/DisplayCell";
+import { Card, CardContent } from "@acme/ui/card";
 
-interface EditableArrayProps<T> extends EditableInput<T[]> {
+interface LiveFormArrayProps<T> extends LiveFormInput<T[]> {
   children:
     | ReactElement
     | ((
@@ -36,7 +35,7 @@ interface EditableArrayProps<T> extends EditableInput<T[]> {
       ) => ReactNode);
 }
 
-function EditableArrayWrapper(props: { label?: string; children: ReactNode }) {
+function LiveFormArrayWrapper(props: { label?: string; children: ReactNode }) {
   return (
     <div className="flex-grow">
       <Label label={props.label} />
@@ -48,9 +47,9 @@ function EditableArrayWrapper(props: { label?: string; children: ReactNode }) {
   );
 }
 
-function EditableArray<T = any>(props: EditableArrayProps<T>) {
+function LiveFormArray<T = any>(props: LiveFormArrayProps<T>) {
   const { children, keyName, label, disabled } = props;
-  const context = useEditableContextWithoutOverride();
+  const context = useLiveFormContextWithoutOverride();
 
   const t = useTranslation();
   if (keyName === undefined || typeof keyName === "number")
@@ -63,7 +62,7 @@ function EditableArray<T = any>(props: EditableArrayProps<T>) {
 
   const onSubmit = (key: string | number, value?: T) => {
     if (typeof key === "string")
-      throw new Error("EditableArray received string key");
+      throw new Error("LiveFormArray received string key");
     handlers.setItem(key, value);
     setUpdate(true);
   };
@@ -91,7 +90,7 @@ function EditableArray<T = any>(props: EditableArrayProps<T>) {
 
   if (typeof children === "function" && !isValidElement(children))
     return (
-      <EditableArrayWrapper label={label}>
+      <LiveFormArrayWrapper label={label}>
         {values.map((_: any, index: number) => (
           <ContextMenu key={`${uuid}${index}:wrapper:`}>
             <ContextMenuTrigger>
@@ -116,10 +115,10 @@ function EditableArray<T = any>(props: EditableArrayProps<T>) {
             <IconPlus />
           </Button>
         )}
-      </EditableArrayWrapper>
+      </LiveFormArrayWrapper>
     );
   return (
-    <EditableArrayWrapper label={label}>
+    <LiveFormArrayWrapper label={label}>
       {/* {values.length == 0 && <div className="h-12 rounded  p-2">⸺</div>} */}
       {values.map((_: any, index: number) => (
         <ContextMenu key={`${uuid}${index}:wrapper:`}>
@@ -146,8 +145,8 @@ function EditableArray<T = any>(props: EditableArrayProps<T>) {
           <IconPlus />
         </Button>
       )}
-    </EditableArrayWrapper>
+    </LiveFormArrayWrapper>
   );
 }
 
-export default EditableArray;
+export default LiveFormArray;

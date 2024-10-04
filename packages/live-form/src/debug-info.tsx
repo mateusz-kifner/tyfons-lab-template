@@ -2,15 +2,15 @@
 import type { CSSProperties } from "react";
 
 import { useUserContext } from "@/context/userContext";
-import type EditableInput from "@/types/EditableInput";
-import { useEditableContext } from "./Editable";
+import type LiveFormInput from "./live-form";
+import { useLiveFormContext } from "./LiveForm";
 
-interface EditableDebugInfoProps extends EditableInput<string> {
+interface LiveFormDebugInfoProps extends LiveFormInput<string> {
   maxLength?: number;
   style?: CSSProperties;
 }
 
-const EditableDebugInfo = (props: EditableDebugInfoProps) => {
+const LiveFormDebugInfo = (props: LiveFormDebugInfoProps) => {
   const {
     label,
     value,
@@ -23,7 +23,7 @@ const EditableDebugInfo = (props: EditableDebugInfoProps) => {
     rightSection,
     keyName,
     ...moreProps
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const { debug } = useUserContext();
 
   return debug ? (
@@ -34,4 +34,4 @@ const EditableDebugInfo = (props: EditableDebugInfoProps) => {
   ) : null;
 };
 
-export default EditableDebugInfo;
+export default LiveFormDebugInfo;

@@ -1,17 +1,17 @@
-import { Label } from "@shirterp/ui-web/Label";
+import { Label } from "@acme/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@shirterp/ui-web/Select";
+} from "@acme/ui/select";
 import useTranslation from "@/hooks/useTranslation";
-import type EditableInput from "@/types/EditableInput";
+import type LiveFormInput from "./live-form";
 import type { SelectProps as RadixSelectProps } from "@radix-ui/react-select";
 import { useId } from "react";
-import { useEditableContext } from "./Editable";
-import { cn } from "@/utils/cn";
+import { useLiveFormContext } from "./LiveForm";
+import { cn } from "@acme/ui";
 
 //  RadixSelectProps {
 //   children?: React.ReactNode;
@@ -28,12 +28,12 @@ import { cn } from "@/utils/cn";
 //   required?: boolean;
 // }
 
-interface EditableEnumProps extends EditableInput<string>, RadixSelectProps {
+interface LiveFormEnumProps extends LiveFormInput<string>, RadixSelectProps {
   enum_data: string[];
   collapse?: boolean;
 }
 
-const EditableEnum = (props: EditableEnumProps) => {
+const LiveFormEnum = (props: LiveFormEnumProps) => {
   const {
     enum_data,
     label,
@@ -47,7 +47,7 @@ const EditableEnum = (props: EditableEnumProps) => {
     leftSection,
     data,
     ...moreProps
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const t = useTranslation();
   const uuid = useId();
 
@@ -81,4 +81,4 @@ const EditableEnum = (props: EditableEnumProps) => {
   );
 };
 
-export default EditableEnum;
+export default LiveFormEnum;

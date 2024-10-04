@@ -13,25 +13,25 @@ import {
   IconUpload,
 } from "@tabler/icons-react";
 
-import { buttonVariants } from "@shirterp/ui-web/Button";
-import { Dialog, DialogContent } from "@shirterp/ui-web/Dialog";
-import { Label } from "@shirterp/ui-web/Label";
+import { buttonVariants } from "@acme/ui/button";
+import { Dialog, DialogContent } from "@acme/ui/dialog";
+import { Label } from "@acme/ui/label";
 import useTranslation from "@/hooks/useTranslation";
 import useUploadMutation from "@/hooks/useUploadMutation";
-import type EditableInput from "@/types/EditableInput";
+import type LiveFormInput from "./live-form";
 import type { File as FileType } from "@/server/api/file/validator";
-import { cn } from "@/utils/cn";
+import { cn } from "@acme/ui";
 import FileListItem from "../FileListItem";
-import { useEditableContext } from "./Editable";
-import { ContextMenuItem } from "@shirterp/ui-web/ContextMenu";
+import { useLiveFormContext } from "./LiveForm";
+import { ContextMenuItem } from "@acme/ui/ContextMenu";
 
 // FIXME: ENFORCE FILE LIMIT
 
-interface EditableFilesProps extends EditableInput<FileType[]> {
+interface LiveFormFilesProps extends LiveFormInput<FileType[]> {
   maxCount?: number;
 }
 
-const EditableFiles = (props: EditableFilesProps) => {
+const LiveFormFiles = (props: LiveFormFilesProps) => {
   const {
     label,
     required,
@@ -40,7 +40,7 @@ const EditableFiles = (props: EditableFilesProps) => {
     disabled,
     maxCount = 128,
     // keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
   const t = useTranslation();
   const uuid = useId();
   const [files, setFiles] = useState<FileType[]>(value ?? []);
@@ -277,4 +277,4 @@ const EditableFiles = (props: EditableFilesProps) => {
   );
 };
 
-export default EditableFiles;
+export default LiveFormFiles;

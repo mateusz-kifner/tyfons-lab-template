@@ -1,8 +1,8 @@
 import { type ReactNode, useId } from "react";
-import Editable, { useEditableContextWithoutOverride } from "./Editable";
-import { Label } from "@shirterp/ui-web/Label";
+import LiveForm, { useLiveFormContextWithoutOverride } from "./LiveForm";
+import { Label } from "@acme/ui/label";
 
-interface EditableObjectProps {
+interface LiveFormObjectProps {
   children: ReactNode;
   data?: Record<string | number, any>;
   onSubmit?: (key: string | number, value: any) => void;
@@ -11,16 +11,16 @@ interface EditableObjectProps {
   label?: string;
 }
 
-function EditableObject(props: EditableObjectProps) {
+function LiveFormObject(props: LiveFormObjectProps) {
   const { children, keyName, className, label } = props;
   if (keyName === undefined) throw new Error("keyName not defined");
-  const context = useEditableContextWithoutOverride();
+  const context = useLiveFormContextWithoutOverride();
   const uuid = useId();
   const data = props?.data?.[keyName] ?? context.data?.[keyName] ?? {};
   const superOnSubmit = props.onSubmit ?? context.onSubmit;
   const onSubmit = (key: string | number, value: any) => {
     if (typeof key === "number")
-      throw new Error("EditableObject received number key");
+      throw new Error("LiveFormObject received number key");
     const newData = { ...data };
     newData[key] = value;
     superOnSubmit?.(keyName, newData);
@@ -30,11 +30,11 @@ function EditableObject(props: EditableObjectProps) {
   return (
     <>
       <Label label={label} />
-      <Editable onSubmit={onSubmit} data={data}>
+      <LiveForm onSubmit={onSubmit} data={data}>
         {children}
-      </Editable>
+      </LiveForm>
     </>
   );
 }
 
-export default EditableObject;
+export default LiveFormObject;

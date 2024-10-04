@@ -1,10 +1,10 @@
-import type EditableInput from "@/types/EditableInput";
-import { useEditableContext } from "./Editable";
+import type LiveFormInput from "./live-form";
+import { useLiveFormContext } from "./LiveForm";
 
-interface EditableJSONProps extends EditableInput<string> {}
+interface LiveFormJSONProps extends LiveFormInput<string> {}
 
-const EditableJSON = (props: EditableJSONProps) => {
-  const { value } = useEditableContext(props);
+const LiveFormJSON = (props: LiveFormJSONProps) => {
+  const { value } = useLiveFormContext(props);
   return (
     <div className="flex-grow">
       <code
@@ -22,4 +22,4 @@ const EditableJSON = (props: EditableJSONProps) => {
   );
 };
 
-export default EditableJSON;
+export default LiveFormJSON;

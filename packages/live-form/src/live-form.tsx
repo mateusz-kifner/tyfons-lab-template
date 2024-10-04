@@ -2,46 +2,46 @@ import { createContext, useContext, type ReactNode } from "react";
 
 export type Key = string | number;
 
-export interface EditableContextType<TData extends Record<Key, any>> {
+export interface LiveFormContextType<TData extends Record<Key, any>> {
   data: TData;
   onSubmit?: (key: Key, value: TData[Key]) => void;
   disabled?: boolean;
 }
 
-export const EditableContext = createContext<EditableContextType<any>>({
+export const LiveFormContext = createContext<LiveFormContextType<any>>({
   data: {},
   onSubmit: () => console.log("Not ready yet"),
   disabled: false,
 });
 
-export interface EditableProps<TData> {
+export interface LiveFormProps<TData> {
   children: ReactNode;
   data: TData;
   onSubmit?: (key: Key, value: any) => void;
   disabled?: boolean;
 }
 
-export function Editable<T extends Record<string, any>>(
-  props: EditableProps<T>,
+export function LiveForm<T extends Record<string, any>>(
+  props: LiveFormProps<T>,
 ) {
   const { children, disabled = false, ...moreProps } = props;
 
   return (
-    <EditableContext.Provider value={{ ...moreProps, disabled }}>
+    <LiveFormContext.Provider value={{ ...moreProps, disabled }}>
       {children}
-    </EditableContext.Provider>
+    </LiveFormContext.Provider>
   );
 }
 
-export function useEditableContextWithoutOverride<
+export function useLiveFormContextWithoutOverride<
   T extends Record<string, any>,
->(): EditableContextType<T> {
-  const state = useContext(EditableContext);
+>(): LiveFormContextType<T> {
+  const state = useContext(LiveFormContext);
 
   return state;
 }
 
-export function useEditableContext<
+export function useLiveFormContext<
   T extends Record<Key, any> & {
     data?: Record<Key, any>;
     onSubmit?: (key: Key, value: TValue) => void; // initial onSubmit
@@ -57,7 +57,7 @@ export function useEditableContext<
     ...moreProps
   } = props;
   if (keyName === undefined) throw new Error("keyName not defined");
-  const state = useContext(EditableContext);
+  const state = useContext(LiveFormContext);
   const data = data_props ?? state.data;
   const onSubmit = onSubmit_props ?? state.onSubmit;
   const value: TValue = data[keyName];
@@ -70,4 +70,4 @@ export function useEditableContext<
   } as Omit<T, "onSubmit"> & { onSubmit: (value: T["value"]) => void }; // Simple onSubmit with proper types
 }
 
-export { Editable as default };
+export { LiveForm as default };

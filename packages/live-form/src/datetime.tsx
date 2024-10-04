@@ -8,21 +8,21 @@ import {
 import { IconCalendar, IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
-import DisplayCell from "@shirterp/ui-web/DisplayCell";
+import DisplayCell from "@acme/ui/DisplayCell";
 import preventLeave from "@/utils/preventLeave";
 
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
-import { useEditableContext } from "./Editable";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
+import { useLiveFormContext } from "./LiveForm";
 
-// TODO: make it editable
+// TODO: make it LiveForm
 // BUG: clicking on label causes copy onClick to occur.
 
-interface EditableDateTimeProps extends EditableInput<string> {
+interface LiveFormDateTimeProps extends LiveFormInput<string> {
   collapse?: boolean;
 }
 
-const EditableDateTime = (props: EditableDateTimeProps) => {
+const LiveFormDateTime = (props: LiveFormDateTimeProps) => {
   const {
     label,
     value,
@@ -31,7 +31,7 @@ const EditableDateTime = (props: EditableDateTimeProps) => {
     // required,
     collapse = false,
     // keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
 
   // let new_props = { ...props }
   // delete new_label
@@ -122,4 +122,4 @@ const EditableDateTime = (props: EditableDateTimeProps) => {
   );
 };
 
-export default EditableDateTime;
+export default LiveFormDateTime;

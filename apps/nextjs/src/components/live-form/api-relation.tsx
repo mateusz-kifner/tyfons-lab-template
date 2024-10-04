@@ -5,20 +5,20 @@ import { IconExternalLink, IconTrashX } from "@tabler/icons-react";
 import _ from "lodash";
 import Link from "next/link";
 
-import Button, { buttonVariants } from "@shirterp/ui-web/Button";
+import Button, { buttonVariants } from "@acme/ui/button";
 import useTranslation from "@/hooks/useTranslation";
 
-import { Dialog, DialogContent, DialogTrigger } from "@shirterp/ui-web/Dialog";
-import { Label } from "@shirterp/ui-web/Label";
-import type EditableInput from "@/types/EditableInput";
-import { cn } from "@/utils/cn";
+import { Dialog, DialogContent, DialogTrigger } from "@acme/ui/dialog";
+import { Label } from "@acme/ui/label";
+import type LiveFormInput from "./live-form";
+import { cn } from "@acme/ui";
 import ApiList from "../ApiList";
-import { useEditableContext } from "./Editable";
+import { useLiveFormContext } from "../../../../../packages/live-form/src/LiveForm";
 import navigationData from "../layout/Navigation/navigationData";
 
-interface EditableApiEntryProps<
+interface LiveFormApiEntryProps<
   TEntry extends { id?: number; [key: string]: any },
-> extends EditableInput<TEntry> {
+> extends LiveFormInput<TEntry> {
   entryName: string;
   // Element: React.ElementType;
   copyProvider?: (value: TEntry | null) => string | undefined;
@@ -29,8 +29,8 @@ interface EditableApiEntryProps<
   allowClear?: boolean;
 }
 
-const EditableApiEntry = <TEntry extends { id?: number; [key: string]: any }>(
-  props: EditableApiEntryProps<TEntry>,
+const LiveFormApiEntry = <TEntry extends { id?: number; [key: string]: any }>(
+  props: LiveFormApiEntryProps<TEntry>,
 ) => {
   const {
     label,
@@ -48,7 +48,7 @@ const EditableApiEntry = <TEntry extends { id?: number; [key: string]: any }>(
     allowClear,
 
     keyName,
-  } = useEditableContext(props);
+  } = useLiveFormContext(props);
 
   const [apiEntry, setApiEntry] = useState<any>(value);
   const [prev, setPrev] = useState<any>(apiEntry);
@@ -200,4 +200,4 @@ const EditableApiEntry = <TEntry extends { id?: number; [key: string]: any }>(
   );
 };
 
-export default EditableApiEntry;
+export default LiveFormApiEntry;
