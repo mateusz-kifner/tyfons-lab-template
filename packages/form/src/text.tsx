@@ -41,7 +41,6 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
     useEffect(() => {
       if (TextAreaRef.current !== null) {
         setTextAreaHeight(TextAreaRef.current);
-        console.log("heigh TextAreaRef.current", TextAreaRef.current);
       }
     }, [TextAreaRef.current]);
 
