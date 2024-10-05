@@ -1,153 +1,74 @@
 import {
+  forwardRef,
   useEffect,
-  useId,
+  useImperativeHandle,
   useRef,
-  useState,
   type CSSProperties,
-  useLayoutEffect,
+  type ReactNode,
 } from "react";
-import DisplayCellExpanding from "@acme/ui/DisplayCellExpanding";
-import preventLeave from "@/utils/preventLeave";
+import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
-import type LiveFormInput from "./live-form";
-import inputFocusAtEndOfLine from "@/utils/inputFocusAtEndOfLine";
-import { useClickOutside } from "@mantine/hooks";
-import { useLiveFormContext } from "./LiveForm";
-import { cn } from "@acme/ui";
+import { useFormContext } from "react-hook-form";
+import { useMergedRef } from "@mantine/hooks";
 
-interface LiveFormTextProps extends LiveFormInput<string> {
-  maxLength?: number;
+interface FormTextProps
+  extends FormInputType,
+    React.InputHTMLAttributes<HTMLTextAreaElement> {
   style?: CSSProperties;
 }
+const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
+  (props, ref) => {
+    const {
+      label,
+      disabled,
+      required,
+      style,
+      className,
+      leftSection,
+      rightSection,
+      ...moreProps
+    } = props;
+    const methods = useFormContext();
 
-const LiveFormText = (props: LiveFormTextProps) => {
-  const {
-    data,
-
-    keyName,
-    value,
-    disabled,
-    onSubmit,
-    className,
-    label,
-    leftSection,
-    maxLength,
-    required,
-    rightSection,
-    style,
-    ...moreProps
-  } = useLiveFormContext(props);
-  const uuid = useId();
-  const [text, setText] = useState<string>(value ?? "");
-  const [focus, setFocus] = useState<boolean>(false);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const outerRef = useClickOutside(() => setFocus(false));
-  const onFocus = () => !disabled && setFocus(true);
-
-  const onSubmitValue = (text: string) => {
-    // if text empty submit undefined
-    if (text.length === 0 && value !== undefined) {
-      onSubmit?.(undefined);
-    } else if (text !== (value ?? "")) {
-      onSubmit?.(text);
-    }
-  };
-
-  useEffect(() => {
-    if (focus) {
-      inputFocusAtEndOfLine(textAreaRef);
-      window.addEventListener("beforeunload", preventLeave);
-    } else {
-      onSubmitValue(text);
-      window.removeEventListener("beforeunload", preventLeave);
-    }
-  }, [focus]);
-
-  useLayoutEffect(() => {
-    return () => {
-      if (text !== (value ?? "")) {
-        onSubmit?.(text);
-      }
-      window.removeEventListener("beforeunload", preventLeave);
+    const setTextAreaHeight = (target: HTMLTextAreaElement) => {
+      target.style.height = "0";
+      target.style.height = `${Math.max(target.scrollHeight, 38)}px`;
     };
-  }, []);
-  useEffect(() => {
-    const new_value = value ?? "";
-    setText(new_value);
-  }, [value]);
 
-  // Set initial text area height
+    const TextAreaRef = useRef<HTMLTextAreaElement | null>(null);
+    const combinedRef = useMergedRef(ref, TextAreaRef);
 
-  useEffect(() => {
-    if (textAreaRef.current !== null) {
-      setTextAreaHeight(textAreaRef.current);
-    }
-  }, [textAreaRef.current]);
-
-  const onChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!(maxLength && e.target.value.length > maxLength)) {
-      setText(e.target.value);
-    }
-  };
-
-  const onKeyDownTextarea = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (focus) {
-      if (e.code === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        (e.target as HTMLTextAreaElement).blur();
-        setFocus(false);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: This warning is incorrect
+    useEffect(() => {
+      if (TextAreaRef.current !== null) {
+        setTextAreaHeight(TextAreaRef.current);
+        console.log("heigh TextAreaRef.current", TextAreaRef.current);
       }
-      if (e.code === "Tab") {
-        (e.target as HTMLTextAreaElement).blur();
-        setFocus(false);
-      }
-    }
-  };
+    }, [TextAreaRef.current]);
 
-  const setTextAreaHeight = (target: HTMLTextAreaElement) => {
-    target.style.height = "0";
-    target.style.height = `${Math.max(target.scrollHeight, 44)}px`;
-  };
-
-  return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
-    <div
-      className="flex-grow"
-      onClick={onFocus}
-      onFocus={onFocus}
-      ref={outerRef}
-    >
-      <Label label={label} copyValue={text} htmlFor={`textarea_${uuid}`} />
-      <DisplayCellExpanding
-        leftSection={leftSection}
-        rightSection={rightSection}
-        focus={focus}
-        className={cn("h-fit", className)}
-      >
-        <textarea
-          id={`textarea_${uuid}`}
-          name={`textarea_${uuid}`}
+    return (
+      <div style={style} className={className}>
+        <Label
+          label={label}
+          copyValue={props.name ? methods.getValues(props.name) : undefined}
           required={required}
-          readOnly={disabled}
-          ref={textAreaRef}
-          className={cn(
-            "w-full resize-none overflow-hidden whitespace-pre-line break-words bg-transparent py-3 text-sm outline-none placeholder:text-gray-400 focus-visible:border-transparent focus-visible:outline-none data-disabled:text-gray-500 dark:data-disabled:text-gray-500 dark:placeholder:text-stone-600",
-            className,
-          )}
-          style={style}
-          value={text}
-          onFocus={onFocus}
-          onClick={onFocus}
-          onChange={onChangeTextarea}
-          onKeyDown={onKeyDownTextarea}
-          onInput={(e) => setTextAreaHeight(e.target as HTMLTextAreaElement)}
-          maxLength={maxLength}
-          placeholder={focus ? undefined : "⸺"}
-          {...moreProps}
         />
-      </DisplayCellExpanding>
-    </div>
-  );
-};
+        <div className="flex w-full items-center gap-2 rounded-md border border-input px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500">
+          {!!leftSection && leftSection}
+          <textarea
+            type="text"
+            disabled={disabled}
+            // required={required}
+            className="flex w-full resize-none overflow-hidden whitespace-pre-line break-words bg-transparent pt-[0.5625rem] pb-2 text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200"
+            onInput={(e) => setTextAreaHeight(e.target as HTMLTextAreaElement)}
+            ref={combinedRef}
+            {...moreProps}
+          />
+          {!!rightSection && rightSection}
+        </div>
+      </div>
+    );
+  },
+);
 
-export default LiveFormText;
+export default FormText;
