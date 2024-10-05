@@ -5,7 +5,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 
-import { cn } from "@acme/ui";
+import { cn } from ".";
 import { Button } from "./button";
 import {
   createContext,

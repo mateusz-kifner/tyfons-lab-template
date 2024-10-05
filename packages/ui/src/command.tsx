@@ -5,7 +5,7 @@ import type { DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import { IconSearch } from "@tabler/icons-react";
 
-import { cn } from "@acme/ui";
+import { cn } from ".";
 import { Dialog, DialogContent } from "./dialog";
 
 const Command = React.forwardRef<

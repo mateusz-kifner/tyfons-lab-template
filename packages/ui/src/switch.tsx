@@ -2,7 +2,7 @@
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import * as React from "react";
 
-import { cn } from "@acme/ui";
+import { cn } from ".";
 import { type VariantProps, cva } from "class-variance-authority";
 
 const switchVariants = cva(

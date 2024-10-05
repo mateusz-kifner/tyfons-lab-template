@@ -3,7 +3,7 @@
 import { IconGripVertical } from "@tabler/icons-react";
 import * as ResizablePrimitive from "react-resizable-panels";
 
-import { cn } from "@acme/ui";
+import { cn } from ".";
 
 const ResizablePanelGroup = ({
   className,

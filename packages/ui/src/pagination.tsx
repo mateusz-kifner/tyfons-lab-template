@@ -5,7 +5,7 @@ import {
   IconDots,
 } from "@tabler/icons-react";
 
-import { cn } from "@acme/ui";
+import { cn } from ".";
 import { Button, type ButtonProps, buttonVariants } from "./button";
 import { useId, useState } from "react";
 import { usePagination } from "@mantine/hooks";
