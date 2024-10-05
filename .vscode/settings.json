@@ -7,5 +7,14 @@
     "sonner",
     "typecheck",
     "vaul"
+  ],
+  "typescript.preferences.autoImportFileExcludePatterns": ["@radix-ui/*"],
+  "javascript.suggest.classMemberSnippets.enabled": false,
+  "typescript.suggest.classMemberSnippets.enabled": false,
+  "typescript.suggest.objectLiteralMethodSnippets.enabled": false,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva([^;]*);", "'([^']*)'"],
+    ["cva([^;]*);", "\"([^\"]*)\""],
+    ["cva([^;]*);", "\\`([^\\`]*)\\`"]
   ]
 }

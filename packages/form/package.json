@@ -33,6 +33,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "typescript": "catalog:"
   },

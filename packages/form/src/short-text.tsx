@@ -1,11 +1,16 @@
-import { forwardRef, type CSSProperties, type ReactNode } from "react";
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
 import { useFormContext } from "react-hook-form";
 
 interface FormShortTextProps
   extends FormInputType,
-    React.InputHTMLAttributes<HTMLInputElement> {
+    InputHTMLAttributes<HTMLInputElement> {
   style?: CSSProperties;
 }
 const FormShortText = forwardRef<HTMLInputElement, FormShortTextProps>(

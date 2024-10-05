@@ -1,10 +1,9 @@
 import {
   forwardRef,
+  type InputHTMLAttributes,
   useEffect,
-  useImperativeHandle,
   useRef,
   type CSSProperties,
-  type ReactNode,
 } from "react";
 import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
@@ -13,7 +12,7 @@ import { useMergedRef } from "@mantine/hooks";
 
 interface FormTextProps
   extends FormInputType,
-    React.InputHTMLAttributes<HTMLTextAreaElement> {
+    InputHTMLAttributes<HTMLTextAreaElement> {
   style?: CSSProperties;
 }
 const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
