@@ -51,4 +51,6 @@ const FormShortText = forwardRef<HTMLInputElement, FormShortTextProps>(
   },
 );
 
+FormShortText.displayName = "FormShortText";
+
 export default FormShortText;

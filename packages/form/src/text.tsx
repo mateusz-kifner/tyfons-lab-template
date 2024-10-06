@@ -69,4 +69,6 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
   },
 );
 
+FormText.displayName = "FormText";
+
 export default FormText;
