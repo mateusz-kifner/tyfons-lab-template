@@ -8,11 +8,9 @@ import {
   FormMessage,
 } from "@acme/ui/form";
 
-import {
-  useForm,
-  useController,
-  type UseControllerProps,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { z } from "zod";
 
 import { Input } from "@acme/ui/input";
@@ -20,22 +18,28 @@ import { toast } from "sonner";
 import { useEffect, useId, useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Button } from "@acme/ui/button";
-import LiveFormShortText from "@acme/form/short-text";
+import FormShortText from "@acme/virtual-form/short-text";
+import { IconAlertCircle, IconLock } from "@tabler/icons-react";
+import FormText from "@acme/virtual-form/text";
+import FormDebugInfo from "@acme/virtual-form/debug-info";
+import FormSwitch from "@acme/virtual-form/switch";
+import { Checkbox } from "@acme/ui/checkbox";
+import FormDate from "@acme/virtual-form/date2";
+import FormEnum from "@acme/virtual-form/enum";
 
 const FormSchema = z.object({
-  username: z.string().optional(),
-  arr: z.array(z.string()).optional().nullable(),
+  date: z.string().optional(),
 });
 
 function TestPage() {
   const [data, setData] = useState<z.infer<typeof FormSchema>>({
-    arr: ["1", "2", "3"],
+    date: "",
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     // resolver: zodResolver(FormSchema),
     values: data,
-    mode: "all",
-    reValidateMode: "onChange",
+    // mode: "all",
+    // reValidateMode: "onChange",
   });
   const [dataDebounced] = useDebouncedValue(data, 500);
 
@@ -59,12 +63,18 @@ function TestPage() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
+          className="flex flex-col gap-4 p-4"
           onChange={(e) => {
             form.handleSubmit(onSubmit)(e);
           }}
         >
-          <LiveFormShortText {...form.register("username")} />
+          <FormDate
+            {...form.register("date")}
+            label="Date"
+            // leftSection={<IconAlertCircle />}
+            // rightSection={<IconAlertCircle />}
+          />
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>

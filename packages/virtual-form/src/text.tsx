@@ -7,7 +7,6 @@ import {
 } from "react";
 import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
-import { useFormContext } from "react-hook-form";
 import { useMergedRef } from "@mantine/hooks";
 
 interface FormTextProps
@@ -27,7 +26,6 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
       rightSection,
       ...moreProps
     } = props;
-    const methods = useFormContext();
 
     const setTextAreaHeight = (target: HTMLTextAreaElement) => {
       target.style.height = "0";
@@ -44,11 +42,15 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
       }
     }, [TextAreaRef.current]);
 
+    if (props.name === undefined) {
+      throw new Error("name is required");
+    }
+
     return (
       <div style={style} className={className}>
         <Label
           label={label}
-          copyValue={props.name ? methods.getValues(props.name) : undefined}
+          // copyValue={""}
           required={required}
         />
         <div className="flex w-full items-center gap-2 rounded-md border border-input px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500">

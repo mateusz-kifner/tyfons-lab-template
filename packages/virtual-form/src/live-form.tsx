@@ -2,46 +2,44 @@ import { createContext, useContext, type ReactNode } from "react";
 
 export type Key = string | number;
 
-export interface LiveFormContextType<TData extends Record<Key, any>> {
+export interface FormContextType<TData extends Record<Key, any>> {
   data: TData;
   onSubmit?: (key: Key, value: TData[Key]) => void;
   disabled?: boolean;
 }
 
-export const LiveFormContext = createContext<LiveFormContextType<any>>({
+export const FormContext = createContext<FormContextType<any>>({
   data: {},
   onSubmit: () => console.log("Not ready yet"),
   disabled: false,
 });
 
-export interface LiveFormProps<TData> {
+export interface FormProps<TData> {
   children: ReactNode;
   data: TData;
   onSubmit?: (key: Key, value: any) => void;
   disabled?: boolean;
 }
 
-export function LiveForm<T extends Record<string, any>>(
-  props: LiveFormProps<T>,
-) {
+export function Form<T extends Record<string, any>>(props: FormProps<T>) {
   const { children, disabled = false, ...moreProps } = props;
 
   return (
-    <LiveFormContext.Provider value={{ ...moreProps, disabled }}>
+    <FormContext.Provider value={{ ...moreProps, disabled }}>
       {children}
-    </LiveFormContext.Provider>
+    </FormContext.Provider>
   );
 }
 
-export function useLiveFormContextWithoutOverride<
+export function useFormContextWithoutOverride<
   T extends Record<string, any>,
->(): LiveFormContextType<T> {
-  const state = useContext(LiveFormContext);
+>(): FormContextType<T> {
+  const state = useContext(FormContext);
 
   return state;
 }
 
-export function useLiveFormContext<
+export function useFormContext<
   T extends Record<Key, any> & {
     data?: Record<Key, any>;
     onSubmit?: (key: Key, value: TValue) => void; // initial onSubmit
@@ -57,7 +55,7 @@ export function useLiveFormContext<
     ...moreProps
   } = props;
   if (keyName === undefined) throw new Error("keyName not defined");
-  const state = useContext(LiveFormContext);
+  const state = useContext(FormContext);
   const data = data_props ?? state.data;
   const onSubmit = onSubmit_props ?? state.onSubmit;
   const value: TValue = data[keyName];
@@ -70,4 +68,4 @@ export function useLiveFormContext<
   } as Omit<T, "onSubmit"> & { onSubmit: (value: T["value"]) => void }; // Simple onSubmit with proper types
 }
 
-export { LiveForm as default };
+export { Form as default };

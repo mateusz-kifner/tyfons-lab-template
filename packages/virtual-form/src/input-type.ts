@@ -1,4 +1,4 @@
-import type { LiveFormContextType, Key } from "@acme/form/live-form";
+import type { FormContextType, Key } from "@acme/virtual-form/live-form";
 import type { ReactNode } from "react";
 
 // export type Key = string | number;
@@ -9,15 +9,13 @@ import type { ReactNode } from "react";
 //   disabled?: boolean;
 // }
 
-export interface LiveFormInputType<
-  T,
-  TData extends Record<Key, T> = Record<Key, T>,
-> extends Partial<LiveFormContextType<TData>> {
+export interface FormInputType {
+  // extends Partial<FormContextType<TData>>
   label?: string;
-  value?: T;
   required?: boolean;
+  disabled?: boolean;
   leftSection?: ReactNode;
   rightSection?: ReactNode;
   className?: string;
-  keyName?: string | number;
+  // keyName?: string | number;
 }

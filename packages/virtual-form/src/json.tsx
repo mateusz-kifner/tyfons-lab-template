@@ -1,10 +1,9 @@
-import type LiveFormInput from "./live-form";
-import { useLiveFormContext } from "./LiveForm";
+import type { FormInputType } from "./input-type";
 
-interface LiveFormJSONProps extends LiveFormInput<string> {}
+interface LiveFormJSONProps extends FormInputType {}
 
 const LiveFormJSON = (props: LiveFormJSONProps) => {
-  const { value } = useLiveFormContext(props);
+  // const { value } = props;
   return (
     <div className="flex-grow">
       <code
@@ -16,7 +15,7 @@ const LiveFormJSON = (props: LiveFormJSONProps) => {
           whiteSpace: "pre",
         }}
       >
-        {JSON.stringify(value, null, 2)}
+        {/* {JSON.stringify(value, null, 2)} */}
       </code>
     </div>
   );

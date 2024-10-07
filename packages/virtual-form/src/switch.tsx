@@ -5,7 +5,6 @@ import {
 } from "react";
 import type { FormInputType } from "./input-type";
 import { Label } from "@acme/ui/label";
-import { Controller, useFormContext } from "react-hook-form";
 import { Switch } from "@acme/ui/switch";
 import { cva, type VariantProps } from "class-variance-authority";
 import { useHover, useMergedRef } from "@mantine/hooks";
@@ -48,8 +47,6 @@ const FormSwitch = forwardRef<HTMLButtonElement, FormSwitchProps>(
       variant,
       ...moreProps
     } = props;
-    const methods = useFormContext();
-    const { control } = methods;
     const { hovered, ref: hoverRef } = useHover();
 
     const active = hovered && !disabled;
@@ -57,17 +54,19 @@ const FormSwitch = forwardRef<HTMLButtonElement, FormSwitchProps>(
     if (props.name === undefined) {
       throw new Error("name must be defined");
     }
-    const val = methods.watch(props.name);
 
     return (
-      <div className="mb-1 flex min-h-[2rem] items-center gap-2" ref={hoverRef}>
-        {!!leftSection && leftSection}
-        <div>{label}</div>
-        {active ? (
-          <Controller
-            control={control}
-            name={props.name}
-            render={({ field }) => (
+      <Controller
+        control={control}
+        name={props.name}
+        render={({ field }) => (
+          <div
+            className="mb-1 flex min-h-[2rem] items-center gap-2"
+            ref={hoverRef}
+          >
+            {!!leftSection && leftSection}
+            <div>{label}</div>
+            {active ? (
               <Switch
                 onCheckedChange={field.onChange}
                 name={field.name}
@@ -75,20 +74,20 @@ const FormSwitch = forwardRef<HTMLButtonElement, FormSwitchProps>(
                 ref={ref}
                 variant={variant}
               />
+            ) : (
+              <div
+                className={editableSwitchVariants({
+                  variant,
+                })}
+                data-state={(field.value ?? false) ? "checked" : "unchecked"}
+              >
+                {field.value ? stateLabels.checked : stateLabels.unchecked}
+              </div>
             )}
-          />
-        ) : (
-          <div
-            className={editableSwitchVariants({
-              variant,
-            })}
-            data-state={(val ?? false) ? "checked" : "unchecked"}
-          >
-            {val ? stateLabels.checked : stateLabels.unchecked}
+            {!!rightSection && rightSection}
           </div>
         )}
-        {!!rightSection && rightSection}
-      </div>
+      />
     );
   },
 );

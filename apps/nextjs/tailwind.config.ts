@@ -9,7 +9,7 @@ export default {
   content: [
     ...baseConfig.content,
     "../../packages/ui/src/*.{ts,tsx}",
-    "../../packages/form/src/*.{ts,tsx}",
+    "../../packages/virtual-form/src/*.{ts,tsx}",
   ],
   presets: [baseConfig],
   theme: {
