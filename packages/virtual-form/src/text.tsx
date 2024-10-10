@@ -41,11 +41,7 @@ const VirtualFormText = forwardRef<HTMLTextAreaElement, VirtualFormTextProps>(
 
     return (
       <div style={style} className={cn("grow", className)}>
-        <Label
-          label={label}
-          // copyValue={""}
-          required={required}
-        />
+        <Label label={label} copyValue={value} required={required} />
         <div className="flex w-full items-center gap-2 rounded-md border border-input px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500">
           {!!leftSection && leftSection}
           <textarea

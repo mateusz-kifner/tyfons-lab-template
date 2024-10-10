@@ -1,7 +1,7 @@
 import VirtualFormDebugInfo from "@acme/virtual-form/debug-info";
 
-function TestDebugInfo({ name }: { name: string | number }) {
-  return <VirtualFormDebugInfo name={name} />;
+function TestDebugInfo(props: Record<string, any> & { name: string | number }) {
+  return <VirtualFormDebugInfo {...props} />;
 }
 
 export default TestDebugInfo;

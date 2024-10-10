@@ -1,7 +1,7 @@
 import VirtualFormDate from "@acme/virtual-form/date";
 
-function TestDate({ name }: { name: string | number }) {
-  return <VirtualFormDate name={name} />;
+function TestDate(props: Record<string, any> & { name: string | number }) {
+  return <VirtualFormDate {...props} />;
 }
 
 export default TestDate;

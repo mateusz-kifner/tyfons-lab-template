@@ -39,6 +39,7 @@ const UIElements: {
   description?: string;
   Element: ComponentType<{
     name: string | number;
+    label: string | number;
   }>;
   className?: string;
   name: string | number;
@@ -115,7 +116,7 @@ function VirtualFormTestPage() {
               }
             >
               <TestVirtualForm defaultData={val.default} name={val.name}>
-                <val.Element name="data" />
+                <val.Element name="data" label={val.title} />
               </TestVirtualForm>
             </Suspense>
           </CardContent>

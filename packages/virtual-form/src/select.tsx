@@ -59,11 +59,7 @@ const FormSelect = forwardRef<HTMLInputElement, FormSelectProps>(
       <div
         className={cn("flex flex-grow", collapse ? "gap-3 pt-3" : "flex-col")}
       >
-        <Label
-          label={label}
-          // copyValue={}
-          required={required}
-        />
+        <Label label={label} copyValue={value} required={required} />
 
         <Select onValueChange={(value) => onChange?.(value)} value={value}>
           <SelectTrigger>

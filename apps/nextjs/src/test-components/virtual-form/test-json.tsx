@@ -1,7 +1,7 @@
 import VirtualFormJSON from "@acme/virtual-form/json";
 
-function TestJSON({ name }: { name: string | number }) {
-  return <VirtualFormJSON name={name} />;
+function TestJSON(props: Record<string, any> & { name: string | number }) {
+  return <VirtualFormJSON {...props} />;
 }
 
 export default TestJSON;

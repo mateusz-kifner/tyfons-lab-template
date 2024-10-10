@@ -1,7 +1,7 @@
 import VirtualFormSwitch from "@acme/virtual-form/switch";
 
-function TestSwitch({ name }: { name: string | number }) {
-  return <VirtualFormSwitch name={name} />;
+function TestSwitch(props: Record<string, any> & { name: string | number }) {
+  return <VirtualFormSwitch {...props} />;
 }
 
 export default TestSwitch;

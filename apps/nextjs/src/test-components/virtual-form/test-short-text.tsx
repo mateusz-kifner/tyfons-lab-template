@@ -1,7 +1,7 @@
 import VirtualFormShortText from "@acme/virtual-form/short-text";
 
-function TestShortText({ name }: { name: string | number }) {
-  return <VirtualFormShortText name={name} />;
+function TestShortText(props: Record<string, any> & { name: string | number }) {
+  return <VirtualFormShortText {...props} />;
 }
 
 export default TestShortText;
