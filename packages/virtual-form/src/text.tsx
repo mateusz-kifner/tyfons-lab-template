@@ -1,31 +1,28 @@
-import {
-  forwardRef,
-  type InputHTMLAttributes,
-  useEffect,
-  useRef,
-  type CSSProperties,
-} from "react";
-import type { FormInputType } from "./input-type";
+import { forwardRef, useEffect, useRef, type CSSProperties } from "react";
+import type { VirtualFormField } from "./input-type";
 import { Label } from "@acme/ui/label";
 import { useMergedRef } from "@mantine/hooks";
+import { useVirtualFormContext } from "./form";
+import { cn } from "@acme/ui";
 
-interface FormTextProps
-  extends FormInputType,
-    InputHTMLAttributes<HTMLTextAreaElement> {
+interface VirtualFormTextProps extends VirtualFormField<string> {
   style?: CSSProperties;
 }
-const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
+const VirtualFormText = forwardRef<HTMLTextAreaElement, VirtualFormTextProps>(
   (props, ref) => {
     const {
       label,
       disabled,
       required,
+      value,
+      onChange,
       style,
       className,
       leftSection,
       rightSection,
+      name,
       ...moreProps
-    } = props;
+    } = useVirtualFormContext(props);
 
     const setTextAreaHeight = (target: HTMLTextAreaElement) => {
       target.style.height = "0";
@@ -42,12 +39,8 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
       }
     }, [TextAreaRef.current]);
 
-    if (props.name === undefined) {
-      throw new Error("name is required");
-    }
-
     return (
-      <div style={style} className={className}>
+      <div style={style} className={cn("grow", className)}>
         <Label
           label={label}
           // copyValue={""}
@@ -56,11 +49,11 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
         <div className="flex w-full items-center gap-2 rounded-md border border-input px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500">
           {!!leftSection && leftSection}
           <textarea
-            type="text"
             disabled={disabled}
             // required={required}
             className="flex w-full resize-none overflow-hidden whitespace-pre-line break-words bg-transparent pt-[0.5625rem] pb-2 text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200"
             onInput={(e) => setTextAreaHeight(e.target as HTMLTextAreaElement)}
+            onChange={(e) => onChange?.(e.target.value)}
             ref={combinedRef}
             {...moreProps}
           />
@@ -71,6 +64,6 @@ const FormText = forwardRef<HTMLTextAreaElement, FormTextProps>(
   },
 );
 
-FormText.displayName = "FormText";
+VirtualFormText.displayName = "VirtualFormText";
 
-export default FormText;
+export default VirtualFormText;

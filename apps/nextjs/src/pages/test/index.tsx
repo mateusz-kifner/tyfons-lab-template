@@ -1,85 +1,128 @@
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@acme/ui/form";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { z } from "zod";
-
-import { Input } from "@acme/ui/input";
+"use client";
 import { toast } from "sonner";
-import { useEffect, useId, useState } from "react";
-import { useDebouncedValue } from "@mantine/hooks";
-import { Button } from "@acme/ui/button";
-import FormShortText from "@acme/virtual-form/short-text";
-import { IconAlertCircle, IconLock } from "@tabler/icons-react";
-import FormText from "@acme/virtual-form/text";
-import FormDebugInfo from "@acme/virtual-form/debug-info";
-import FormSwitch from "@acme/virtual-form/switch";
-import { Checkbox } from "@acme/ui/checkbox";
-import FormDate from "@acme/virtual-form/date2";
-import FormEnum from "@acme/virtual-form/enum";
+import { type ComponentType, lazy, Suspense, useId, useState } from "react";
 
-const FormSchema = z.object({
-  date: z.string().optional(),
-});
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@acme/ui/card";
+import { IconLoader2 } from "@tabler/icons-react";
+import { cn } from "@acme/ui";
+import { ThemeToggle } from "@acme/ui/theme";
+import VirtualForm from "../../../../../packages/virtual-form/dist/src/form";
+import TestVirtualForm from "@/test-components/virtual-form/test-virtual-form";
 
-function TestPage() {
-  const [data, setData] = useState<z.infer<typeof FormSchema>>({
-    date: "",
-  });
-  const form = useForm<z.infer<typeof FormSchema>>({
-    // resolver: zodResolver(FormSchema),
-    values: data,
-    // mode: "all",
-    // reValidateMode: "onChange",
-  });
-  const [dataDebounced] = useDebouncedValue(data, 500);
+const TestDate = lazy(() => import("@/test-components/virtual-form/test-date"));
+const TestDatetime = lazy(
+  () => import("@/test-components/virtual-form/test-datetime"),
+);
+const TestDebugInfo = lazy(
+  () => import("@/test-components/virtual-form/test-debug-info"),
+);
+const TestJSON = lazy(() => import("@/test-components/virtual-form/test-json"));
+const TestSelect = lazy(
+  () => import("@/test-components/virtual-form/test-select"),
+);
+const TestShortText = lazy(
+  () => import("@/test-components/virtual-form/test-short-text"),
+);
+const TestSwitch = lazy(
+  () => import("@/test-components/virtual-form/test-switch"),
+);
+const TestText = lazy(() => import("@/test-components/virtual-form/test-text"));
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    setData(data);
-  }
+const UIElements: {
+  title: string;
+  description?: string;
+  Element: ComponentType<{
+    name: string | number;
+  }>;
+  className?: string;
+  name: string | number;
+  default: any;
+}[] = [
+  {
+    title: "Test Date",
+    Element: TestDate,
+    name: "testDate",
+    default: "2022-01-01",
+  },
+  {
+    title: "Test Datetime",
+    Element: TestDatetime,
+    name: "testDatetime",
+    default: "2022-01-01",
+  },
+  {
+    title: "Test Debug Info",
+    Element: TestDebugInfo,
+    name: "testDebugInfo",
+    default: "TESTID",
+  },
+  {
+    title: "Test JSON",
+    Element: TestJSON,
+    name: "testJSON",
+    default: '{"test":"ala ma kota"}',
+  },
+  {
+    title: "Test Select",
+    Element: TestSelect,
+    name: "testSelect",
+    default: "test1",
+  },
 
-  useEffect(() => {
-    toast("Submitted:", {
-      description: (
-        <pre className="mt-2 w-[332px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(dataDebounced, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-  }, [dataDebounced]);
+  {
+    title: "Test Short Text",
+    Element: TestShortText,
+    name: "testShortText",
+    default: "test",
+  },
+  {
+    title: "Test Switch",
+    Element: TestSwitch,
+    name: "testSwitch",
+    default: false,
+  },
+  {
+    title: "Test Text",
+    Element: TestText,
+    name: "testText",
+    default: "test",
+  },
+];
+
+function VirtualFormTestPage() {
+  const uuid = useId();
   return (
-    <div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 p-4"
-          onChange={(e) => {
-            form.handleSubmit(onSubmit)(e);
-          }}
-        >
-          <FormDate
-            {...form.register("date")}
-            label="Date"
-            // leftSection={<IconAlertCircle />}
-            // rightSection={<IconAlertCircle />}
-          />
-
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+    <div className="mx-auto flex min-h-screen max-w-screen-xl flex-col gap-4 p-2 pb-96">
+      <ThemeToggle />
+      {UIElements.map((val, index) => (
+        <Card key={`${uuid}${index}:`}>
+          <CardHeader>
+            <CardTitle>{val.title}</CardTitle>
+            {val.description !== undefined && (
+              <CardDescription>{val.description}</CardDescription>
+            )}
+          </CardHeader>
+          <CardContent className={cn("flex gap-2 p-2", val.className)}>
+            <Suspense
+              fallback={
+                <IconLoader2 className="direction-reverse animate-spin" />
+              }
+            >
+              <TestVirtualForm defaultData={val.default} name={val.name}>
+                <val.Element name="data" />
+              </TestVirtualForm>
+            </Suspense>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
 
-export default TestPage;
+export default VirtualFormTestPage;

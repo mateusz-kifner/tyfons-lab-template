@@ -8,64 +8,29 @@ import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import { Calendar } from "@acme/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
-import {
-  type CSSProperties,
-  forwardRef,
-  type InputHTMLAttributes,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import type { FormInputType } from "./input-type";
-import { useFormContext } from "react-hook-form";
-import { useMergedRef } from "@mantine/hooks";
+import { type CSSProperties, useRef } from "react";
+import type { VirtualFormField } from "./input-type";
+import { useVirtualFormContext } from "./form";
+import { getDateFromValue } from "./utils";
 
-interface FormDateProps
-  extends FormInputType,
-    InputHTMLAttributes<HTMLInputElement> {
+interface VirtualFormDateProps extends VirtualFormField<string | null> {
   style?: CSSProperties;
-  submitOnChange?: boolean;
 }
 
-const FormDate = forwardRef<HTMLInputElement, FormDateProps>((props, ref) => {
+const VirtualFormDate = (props: VirtualFormDateProps) => {
   const {
     leftSection,
     rightSection,
     name,
+    value,
     onChange,
-    onBlur,
     required,
     disabled,
-  } = props;
-  const methods = useFormContext();
-  // const [forceChange, setForceChange] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
+    ...moreProps
+  } = useVirtualFormContext(props);
   const portalRef = useRef<HTMLDivElement>(null);
-  const mergedRef = useMergedRef(ref, inputRef);
-  const uuid = useId();
 
-  if (name === undefined) {
-    throw new Error("name is required");
-  }
-
-  const date = methods.watch(name);
-
-  const triggerChange = () => {
-    const hidden_input = document?.querySelector(
-      `#${uuid.replaceAll(":", "_")}hidden_input`,
-    );
-    console.log(hidden_input);
-    hidden_input?.dispatchEvent(
-      new Event("change", { bubbles: true, cancelable: false }),
-    );
-  };
-
-  // useLayoutEffect(() => {
-  //   triggerChange();
-  //   console.log("change", forceChange);
-  // }, [forceChange]);
+  const date = getDateFromValue(value);
 
   return (
     <div className="flex w-full grow flex-col">
@@ -94,43 +59,18 @@ const FormDate = forwardRef<HTMLInputElement, FormDateProps>((props, ref) => {
           align="start"
           container={portalRef.current}
         >
-          <div>
-            <input
-              type="hidden"
-              id={`${uuid.replaceAll(":", "_")}hidden_input`}
-              name={name}
-              ref={mergedRef}
-              onChange={onChange}
-              onBlur={onBlur}
-              disabled={disabled}
-            />
-            <Button
-              onClick={() => {
-                methods.setValue(name, "2001-01-01");
-                // setForceChange((v) => v + 1);
-
-                triggerChange();
-              }}
-            >
-              test
-            </Button>
-            <Calendar
-              mode="single"
-              selected={new Date(date)}
-              onSelect={(date) => {
-                methods.setValue(name, date?.toISOString());
-                // setForceChange((v) => v + 1);
-                setTimeout(triggerChange, 1000);
-              }}
-              initialFocus
-            />
-          </div>
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(date) =>
+              date ? onChange?.(date?.toISOString()) : onChange?.(null)
+            }
+            initialFocus
+            {...moreProps}
+          />
         </PopoverContent>
       </Popover>
     </div>
   );
-});
-
-FormDate.displayName = "FormDate";
-
-export default FormDate;
+};
+export default VirtualFormDate;

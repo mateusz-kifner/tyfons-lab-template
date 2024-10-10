@@ -1,13 +1,10 @@
-import {
-  forwardRef,
-  type InputHTMLAttributes,
-  type CSSProperties,
-} from "react";
-import type { FormInputType } from "./input-type";
+import { forwardRef, type CSSProperties } from "react";
 import { Label } from "@acme/ui/label";
 import { Switch } from "@acme/ui/switch";
 import { cva, type VariantProps } from "class-variance-authority";
-import { useHover, useMergedRef } from "@mantine/hooks";
+import { useHover } from "@mantine/hooks";
+import type { VirtualFormField } from "./input-type";
+import { useVirtualFormContext } from "./form";
 
 const editableSwitchVariants = cva(
   "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50",
@@ -25,73 +22,52 @@ const editableSwitchVariants = cva(
   },
 );
 
-interface FormSwitchProps
-  extends FormInputType,
-    InputHTMLAttributes<HTMLButtonElement>,
+interface VirtualFormSwitchProps
+  extends VirtualFormField<boolean | null>,
     VariantProps<typeof editableSwitchVariants> {
   style?: CSSProperties;
   stateLabels?: { checked: string; unchecked: string };
   // stateColors?: { checked: string; unchecked: string };
 }
-const FormSwitch = forwardRef<HTMLButtonElement, FormSwitchProps>(
-  (props, ref) => {
-    const {
-      label,
-      disabled,
-      required,
-      style,
-      stateLabels = { checked: "Tak", unchecked: "Nie" },
-      className,
-      leftSection,
-      rightSection,
-      variant,
-      ...moreProps
-    } = props;
-    const { hovered, ref: hoverRef } = useHover();
+const VirtualFormSwitch = (props: VirtualFormSwitchProps) => {
+  const {
+    label,
+    value,
+    onChange,
+    disabled,
+    required,
+    style,
+    stateLabels = { checked: "Tak", unchecked: "Nie" },
+    className,
+    leftSection,
+    rightSection,
+    variant,
+    name,
+    ...moreProps
+  } = useVirtualFormContext(props);
+  const { hovered, ref: hoverRef } = useHover();
 
-    const active = hovered && !disabled;
+  const active = hovered && !disabled;
 
-    if (props.name === undefined) {
-      throw new Error("name must be defined");
-    }
+  return (
+    <div className="mb-1 flex min-h-[2rem] items-center gap-2" ref={hoverRef}>
+      {!!leftSection && leftSection}
+      <div>{label}</div>
+      {active ? (
+        <Switch onCheckedChange={onChange} checked={value} variant={variant} />
+      ) : (
+        <div
+          className={editableSwitchVariants({
+            variant,
+          })}
+          data-state={(value ?? false) ? "checked" : "unchecked"}
+        >
+          {value ? stateLabels.checked : stateLabels.unchecked}
+        </div>
+      )}
+      {!!rightSection && rightSection}
+    </div>
+  );
+};
 
-    return (
-      <Controller
-        control={control}
-        name={props.name}
-        render={({ field }) => (
-          <div
-            className="mb-1 flex min-h-[2rem] items-center gap-2"
-            ref={hoverRef}
-          >
-            {!!leftSection && leftSection}
-            <div>{label}</div>
-            {active ? (
-              <Switch
-                onCheckedChange={field.onChange}
-                name={field.name}
-                checked={field.value}
-                ref={ref}
-                variant={variant}
-              />
-            ) : (
-              <div
-                className={editableSwitchVariants({
-                  variant,
-                })}
-                data-state={(field.value ?? false) ? "checked" : "unchecked"}
-              >
-                {field.value ? stateLabels.checked : stateLabels.unchecked}
-              </div>
-            )}
-            {!!rightSection && rightSection}
-          </div>
-        )}
-      />
-    );
-  },
-);
-
-FormSwitch.displayName = "FormSwitch";
-
-export default FormSwitch;
+export default VirtualFormSwitch;

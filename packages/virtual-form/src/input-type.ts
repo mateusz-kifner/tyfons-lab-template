@@ -1,21 +1,21 @@
-import type { FormContextType, Key } from "@acme/virtual-form/live-form";
+import type { VirtualFormContextType, Key } from "./form";
 import type { ReactNode } from "react";
 
 // export type Key = string | number;
 
-// export interface LiveFormContextType<TData extends Record<Key, any>> {
-//   data: TData;
-//   onSubmit?: (key: Key, value: TData[Key]) => void;
-//   disabled?: boolean;
-// }
-
-export interface FormInputType {
-  // extends Partial<FormContextType<TData>>
+export interface VirtualFormField<
+  T,
+  TData extends Record<Key, T> = Record<Key, T>,
+> extends Partial<
+    Omit<VirtualFormContextType<TData>, "onSubmit" | "onChange">
+  > {
   label?: string;
+  value?: T;
+  onChange?: (value: T) => void;
   required?: boolean;
   disabled?: boolean;
   leftSection?: ReactNode;
   rightSection?: ReactNode;
   className?: string;
-  // keyName?: string | number;
+  name?: string | number;
 }

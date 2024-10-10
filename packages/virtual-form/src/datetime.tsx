@@ -8,69 +8,61 @@ import { cn } from "@acme/ui";
 import { Button } from "@acme/ui/button";
 import { Calendar } from "@acme/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
-import {
-  type CSSProperties,
-  forwardRef,
-  type InputHTMLAttributes,
-} from "react";
-import type { FormInputType } from "./input-type";
-import { Controller, useFormContext } from "react-hook-form";
+import type { CSSProperties } from "react";
+import type { VirtualFormField } from "./input-type";
+import { useVirtualFormContext } from "./form";
+import { getDateFromValue } from "./utils";
 
-interface FormDateTimeProps
-  extends FormInputType,
-    InputHTMLAttributes<HTMLInputElement> {
+interface FormDateTimeProps extends VirtualFormField<string | null> {
   style?: CSSProperties;
 }
 
-const FormDateTime = forwardRef<HTMLInputElement, FormDateTimeProps>(
-  (props, ref) => {
-    const { leftSection, rightSection } = props;
-    const methods = useFormContext();
-    const { control } = methods;
+const FormDateTime = (props: FormDateTimeProps) => {
+  const {
+    value,
+    onChange,
+    disabled,
+    required,
+    style,
+    className,
+    leftSection,
+    rightSection,
+    name,
+  } = useVirtualFormContext(props);
 
-    if (props.name === undefined) {
-      throw new Error("name is required");
-    }
-    const datetime = methods.watch(props.name);
+  const date = getDateFromValue(value);
 
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className="justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
-          >
-            {leftSection ? leftSection : <IconCalendar />}
-            <span
-              className={cn(
-                "grow text-foreground",
-                !datetime && "text-muted-foreground",
-              )}
-            >
-              {datetime ? format(datetime, "dd.MM.yyyy") : "Pick a date"}
-            </span>
-            {rightSection && rightSection}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Controller
-            control={control}
-            name={props.name}
-            render={({ field }) => (
-              <Calendar
-                mode="single"
-                selected={datetime}
-                onSelect={(date) => field.onChange(date)}
-                initialFocus
-              />
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className="grow justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
+        >
+          {leftSection ? leftSection : <IconCalendar />}
+          <span
+            className={cn(
+              "grow text-foreground",
+              !date && "text-muted-foreground",
             )}
-          />
-        </PopoverContent>
-      </Popover>
-    );
-  },
-);
-
-FormDateTime.displayName = "FormDateTime";
+          >
+            {date ? format(date, "dd.MM.yyyy") : "Pick a date"}
+          </span>
+          {rightSection && rightSection}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={(date) =>
+            date ? onChange?.(date.toISOString()) : onChange?.(null)
+          }
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 export default FormDateTime;

@@ -1,6 +1,6 @@
-import type { FormInputType } from "./input-type";
+import type { VirtualFormField } from "./input-type";
 
-interface LiveFormJSONProps extends FormInputType {}
+interface LiveFormJSONProps extends VirtualFormField<string> {}
 
 const LiveFormJSON = (props: LiveFormJSONProps) => {
   // const { value } = props;

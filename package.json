@@ -11,7 +11,7 @@
     "clean:workspaces": "turbo run clean",
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
-    "dev": "turbo watch dev --continue",
+    "dev": "./start-database.sh && turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/nextjs...",
     "format:mock": "turbo format --continue --",
     "format": "turbo format --continue -- --write",
