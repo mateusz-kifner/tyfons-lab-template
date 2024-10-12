@@ -14,7 +14,7 @@ function TestCalendar() {
   const [date2, setDate2] = React.useState<Date | undefined>(new Date());
 
   return (
-    <div className="flex gap-4 p-4 flex-col">
+    <div className="flex flex-col gap-4 p-4">
       <Calendar
         mode="single"
         selected={date}
@@ -40,7 +40,6 @@ function TestCalendar() {
             disabled={(date) =>
               date > new Date() || date < new Date("1900-01-01")
             }
-            initialFocus
           />
         </PopoverContent>
       </Popover>

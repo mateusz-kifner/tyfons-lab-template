@@ -15,8 +15,8 @@
   "devDependencies": {
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "@types/node": "20.16.10",
-    "h3": "1.12.0",
+    "@types/node": "20.16.11",
+    "h3": "1.13.0",
     "nitropack": "2.9.7",
     "typescript": "catalog:"
   }
