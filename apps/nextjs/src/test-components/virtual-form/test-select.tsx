@@ -1,6 +1,8 @@
 import VirtualFormSelect from "@acme/virtual-form/select";
 
-function TestSelect(props: Record<string, any> & { name: string | number }) {
+function TestSelect(
+  props: Record<string, any> & { name: string | number; label?: any },
+) {
   return <VirtualFormSelect options={["test1", "test2", "test3"]} {...props} />;
 }
 

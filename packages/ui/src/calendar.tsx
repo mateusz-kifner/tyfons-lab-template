@@ -1,10 +1,67 @@
 "use client";
 
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, type DropdownProps } from "react-day-picker";
 
 import { cn } from ".";
-import { buttonVariants } from "./button";
+import { Button, buttonVariants } from "./button";
+import { Dialog, DialogContent, DialogTrigger } from "./dialog";
+import { format, setMonth } from "date-fns";
+import { type ChangeEvent, useRef, useState } from "react";
+import { Portal } from "@radix-ui/react-portal";
+
+function CalendarDropdown({
+  options,
+  value,
+  onChange,
+  container,
+  ...moreProps
+}: DropdownProps & { container: HTMLDivElement | null }) {
+  const [open, setOpen] = useState(false);
+  const selectedOption = options?.find(({ value: v }) => v === value);
+  const months = Array.from({ length: 12 }, (_, index) =>
+    format(setMonth(new Date(), index), "LLL"),
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          className="h-7 font-medium text-sm first:rounded-r-none first:pr-1 last:rounded-l-none last:pl-1"
+          size="sm"
+          variant="ghost"
+          onClick={() => setOpen(!open)}
+        >
+          {selectedOption?.label}
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="absolute grid h-full w-full grid-cols-3 border-none"
+        container={container}
+        hideOverlay
+      >
+        {options?.map(({ label, disabled, value }) => (
+          <Button
+            variant="ghost"
+            key={value}
+            size="lg"
+            className="text-xs"
+            disabled={disabled}
+            onClick={() => {
+              const event = {
+                target: { value },
+              } as unknown as ChangeEvent<HTMLSelectElement>;
+              onChange?.(event);
+              setOpen(false);
+            }}
+          >
+            {label}
+          </Button>
+        ))}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -14,50 +71,61 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const ref = useRef<HTMLDivElement>(null);
   return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
-      classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "space-x-1 flex items-center",
-        nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-        ),
-        day_range_end: "day-range-end",
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ ...props }) => <IconChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <IconChevronRight className="h-4 w-4" />,
-      }}
-      {...props}
-    />
+    <div className="relative" ref={ref}>
+      <DayPicker
+        showOutsideDays={showOutsideDays}
+        captionLayout="dropdown"
+        className={cn("p-3", className)}
+        classNames={{
+          months: "relative",
+          month: "pt-9",
+          weekdays: "flex justify-around",
+          dropdowns: "flex absolute top-1 left-1/2 -translate-x-1/2",
+          // month_caption:
+          //   "absolute top-1 left-1/2 -translate-x-1/2 bg-red-500 h-7 w-44 flex items-center justify-center",
+          // // caption_label: "text-sm font-medium",
+          nav: "absolute top-1 right-0 left-0 flex items-center justify-between",
+          button_next: cn(
+            buttonVariants({ variant: "outline" }),
+            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          ),
+          button_previous: cn(
+            buttonVariants({ variant: "outline" }),
+            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          ),
+          week: "flex justify-around",
+          day_button: cn(
+            buttonVariants({ variant: "ghost" }),
+            "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+          ),
+          range_end: "rounded-md range-end",
+          selected:
+            "rounded-md bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+          today: "rounded-md bg-accent text-accent-foreground",
+          outside:
+            "rounded-md day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+          disabled: "rounded-md text-muted-foreground opacity-50",
+          range_middle:
+            "rounded-md aria-selected:bg-accent aria-selected:text-accent-foreground",
+          hidden: "invisible",
+          ...classNames,
+        }}
+        components={{
+          Chevron: ({ ...props }) =>
+            props.orientation === "left" ? (
+              <IconChevronLeft className="h-4 w-4" />
+            ) : (
+              <IconChevronRight className="h-4 w-4" />
+            ),
+          Dropdown: ({ ...props }) => (
+            <CalendarDropdown {...props} container={ref.current} />
+          ),
+        }}
+        {...props}
+      />
+    </div>
   );
 }
 Calendar.displayName = "Calendar";

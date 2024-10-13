@@ -33,6 +33,9 @@ const PopoverContent = React.forwardRef<
     </PopoverPrimitive.Portal>
   ),
 );
+
+const PopoverAnchor = PopoverPrimitive.Anchor;
+
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent };
+export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent };

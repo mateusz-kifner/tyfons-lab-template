@@ -12,6 +12,7 @@ import type { CSSProperties } from "react";
 import type { VirtualFormField } from "./input-type";
 import { useVirtualFormContext } from "./form";
 import { getDateFromValue } from "./utils";
+import { Label } from "@acme/ui/label";
 
 interface FormDateTimeProps extends VirtualFormField<string | null> {
   style?: CSSProperties;
@@ -19,6 +20,7 @@ interface FormDateTimeProps extends VirtualFormField<string | null> {
 
 const FormDateTime = (props: FormDateTimeProps) => {
   const {
+    label,
     value,
     onChange,
     disabled,
@@ -33,35 +35,37 @@ const FormDateTime = (props: FormDateTimeProps) => {
   const date = getDateFromValue(value);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className="grow justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
-        >
-          {leftSection ? leftSection : <IconCalendar />}
-          <span
-            className={cn(
-              "grow text-foreground",
-              !date && "text-muted-foreground",
-            )}
+    <div>
+      <Label label={label} copyValue={value} required={required} />
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className="grow justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
           >
-            {date ? format(date, "dd.MM.yyyy") : "Pick a date"}
-          </span>
-          {rightSection && rightSection}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(date) =>
-            date ? onChange?.(date.toISOString()) : onChange?.(null)
-          }
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+            {leftSection ? leftSection : <IconCalendar />}
+            <span
+              className={cn(
+                "grow text-foreground",
+                !date && "text-muted-foreground",
+              )}
+            >
+              {date ? format(date, "dd.MM.yyyy") : "Pick a date"}
+            </span>
+            {rightSection && rightSection}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(date) =>
+              date ? onChange?.(date.toISOString()) : onChange?.(null)
+            }
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 

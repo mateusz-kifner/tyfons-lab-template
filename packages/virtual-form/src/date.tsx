@@ -12,6 +12,7 @@ import { type CSSProperties, useRef } from "react";
 import type { VirtualFormField } from "./input-type";
 import { useVirtualFormContext } from "./form";
 import { getDateFromValue } from "./utils";
+import { Label } from "@acme/ui/label";
 
 interface VirtualFormDateProps extends VirtualFormField<string | null> {
   style?: CSSProperties;
@@ -19,6 +20,7 @@ interface VirtualFormDateProps extends VirtualFormField<string | null> {
 
 const VirtualFormDate = (props: VirtualFormDateProps) => {
   const {
+    label,
     leftSection,
     rightSection,
     name,
@@ -35,7 +37,7 @@ const VirtualFormDate = (props: VirtualFormDateProps) => {
   return (
     <div className="flex w-full grow flex-col">
       <div ref={portalRef} />
-
+      <Label label={label} copyValue={value} required={required} />
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -65,7 +67,6 @@ const VirtualFormDate = (props: VirtualFormDateProps) => {
             onSelect={(date) =>
               date ? onChange?.(date?.toISOString()) : onChange?.(null)
             }
-            initialFocus
             {...moreProps}
           />
         </PopoverContent>

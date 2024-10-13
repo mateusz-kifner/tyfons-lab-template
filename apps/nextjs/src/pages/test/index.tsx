@@ -1,6 +1,6 @@
 "use client";
 import { toast } from "sonner";
-import { type ComponentType, lazy, Suspense, useId, useState } from "react";
+import { type ComponentType, Suspense, useId, useState } from "react";
 
 import {
   Card,
@@ -9,38 +9,57 @@ import {
   CardHeader,
   CardTitle,
 } from "@acme/ui/card";
-import { IconLoader2 } from "@tabler/icons-react";
+import { IconBug, IconBugOff, IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@acme/ui";
 import { ThemeToggle } from "@acme/ui/theme";
 import VirtualForm from "../../../../../packages/virtual-form/dist/src/form";
 import TestVirtualForm from "@/test-components/virtual-form/test-virtual-form";
+import { useLocalStorage } from "@mantine/hooks";
+import { Button } from "@acme/ui/button";
+import dynamic from "next/dynamic";
 
-const TestDate = lazy(() => import("@/test-components/virtual-form/test-date"));
-const TestDatetime = lazy(
+const TestDate = dynamic(
+  () => import("@/test-components/virtual-form/test-date"),
+  { ssr: false },
+);
+const TestDatetime = dynamic(
   () => import("@/test-components/virtual-form/test-datetime"),
+  { ssr: false },
 );
-const TestDebugInfo = lazy(
+const TestDebugInfo = dynamic(
   () => import("@/test-components/virtual-form/test-debug-info"),
+  { ssr: false },
 );
-const TestJSON = lazy(() => import("@/test-components/virtual-form/test-json"));
-const TestSelect = lazy(
+const TestJSON = dynamic(
+  () => import("@/test-components/virtual-form/test-json"),
+  { ssr: false },
+);
+const TestSelect = dynamic(
   () => import("@/test-components/virtual-form/test-select"),
+  { ssr: false },
 );
-const TestShortText = lazy(
+const TestShortText = dynamic(
   () => import("@/test-components/virtual-form/test-short-text"),
+  { ssr: false },
 );
-const TestSwitch = lazy(
+const TestSwitch = dynamic(
   () => import("@/test-components/virtual-form/test-switch"),
+  { ssr: false },
 );
-const TestText = lazy(() => import("@/test-components/virtual-form/test-text"));
+const TestText = dynamic(
+  () => import("@/test-components/virtual-form/test-text"),
+  { ssr: false },
+);
 
 const UIElements: {
   title: string;
   description?: string;
-  Element: ComponentType<{
-    name: string | number;
-    label: string | number;
-  }>;
+  Element: ComponentType<
+    Record<string, any> & {
+      name: string | number;
+      label?: any;
+    }
+  >;
   className?: string;
   name: string | number;
   default: any;
@@ -67,7 +86,7 @@ const UIElements: {
     title: "Test JSON",
     Element: TestJSON,
     name: "testJSON",
-    default: '{"test":"ala ma kota"}',
+    default: { test: "ala ma kota" },
   },
   {
     title: "Test Select",
@@ -98,9 +117,23 @@ const UIElements: {
 
 function VirtualFormTestPage() {
   const uuid = useId();
+  const [debug, setDebug] = useLocalStorage({
+    key: "debug",
+    defaultValue: "false",
+  });
+
   return (
     <div className="mx-auto flex min-h-screen max-w-screen-xl flex-col gap-4 p-2 pb-96">
-      <ThemeToggle />
+      <div className="flex gap-4">
+        <ThemeToggle />
+        <Button
+          size="icon"
+          className="flex-col"
+          onClick={() => setDebug((v) => (v === "true" ? "false" : "true"))}
+        >
+          {debug === "true" ? <IconBug /> : <IconBugOff />}
+        </Button>
+      </div>
       {UIElements.map((val, index) => (
         <Card key={`${uuid}${index}:`}>
           <CardHeader>

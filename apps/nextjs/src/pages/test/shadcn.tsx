@@ -6,105 +6,185 @@ import {
   CardHeader,
   CardTitle,
 } from "@acme/ui/card";
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
 import { cn } from "@acme/ui";
 import { IconLoader2 } from "@tabler/icons-react";
 import { type ComponentType, useId } from "react";
 import type { GetStaticProps } from "next";
 import { ThemeToggle } from "@acme/ui/theme";
+import dynamic from "next/dynamic";
 
-const TestAccordion = lazy(
+const TestAccordion = dynamic(
   () => import("@/test-components/shadcn/test-accordion"),
+  { ssr: false },
 );
-const TestAlert = lazy(() => import("@/test-components/shadcn/test-alert"));
-const TestAlertDialog = lazy(
+const TestAlert = dynamic(() => import("@/test-components/shadcn/test-alert"), {
+  ssr: false,
+});
+const TestAlertDialog = dynamic(
   () => import("@/test-components/shadcn/test-alert-dialog"),
+  { ssr: false },
 );
-const TestAspectRatio = lazy(
+const TestAspectRatio = dynamic(
   () => import("@/test-components/shadcn/test-aspect-ratio"),
+  { ssr: false },
 );
-const TestBadge = lazy(() => import("@/test-components/shadcn/test-badge"));
-const TestBreadcrumb = lazy(
+const TestBadge = dynamic(() => import("@/test-components/shadcn/test-badge"), {
+  ssr: false,
+});
+const TestBreadcrumb = dynamic(
   () => import("@/test-components/shadcn/test-breadcrumb"),
+  { ssr: false },
 );
-const TestButton = lazy(() => import("@/test-components/shadcn/test-button"));
-const TestCalendar = lazy(
+const TestButton = dynamic(
+  () => import("@/test-components/shadcn/test-button"),
+  { ssr: false },
+);
+const TestCalendar = dynamic(
   () => import("@/test-components/shadcn/test-calendar"),
+  { ssr: false },
 );
 
-const TestCard = lazy(() => import("@/test-components/shadcn/test-card"));
-const TestCarousel = lazy(
+const TestCard = dynamic(() => import("@/test-components/shadcn/test-card"), {
+  ssr: false,
+});
+const TestCarousel = dynamic(
   () => import("@/test-components/shadcn/test-carousel"),
+  { ssr: false },
 );
-const TestChart = lazy(() => import("@/test-components/shadcn/test-chart"));
-const TestCheckbox = lazy(
+const TestChart = dynamic(() => import("@/test-components/shadcn/test-chart"), {
+  ssr: false,
+});
+const TestCheckbox = dynamic(
   () => import("@/test-components/shadcn/test-checkbox"),
+  { ssr: false },
 );
-const TestCollapsible = lazy(
+const TestCollapsible = dynamic(
   () => import("@/test-components/shadcn/test-collapsible"),
+  { ssr: false },
 );
-const TestCombobox = lazy(
+const TestCombobox = dynamic(
   () => import("@/test-components/shadcn/test-combobox"),
+  { ssr: false },
 );
-const TestCommand = lazy(() => import("@/test-components/shadcn/test-command"));
-const TestContextMenu = lazy(
+const TestCommand = dynamic(
+  () => import("@/test-components/shadcn/test-command"),
+  { ssr: false },
+);
+const TestContextMenu = dynamic(
   () => import("@/test-components/shadcn/test-context-menu"),
+  { ssr: false },
 );
-const TestDialog = lazy(() => import("@/test-components/shadcn/test-dialog"));
-const TestDrawer = lazy(() => import("@/test-components/shadcn/test-drawer"));
-const TestDropdownMenu = lazy(
+const TestDialog = dynamic(
+  () => import("@/test-components/shadcn/test-dialog"),
+  { ssr: false },
+);
+const TestDrawer = dynamic(
+  () => import("@/test-components/shadcn/test-drawer"),
+  { ssr: false },
+);
+const TestDropdownMenu = dynamic(
   () => import("@/test-components/shadcn/test-dropdown-menu"),
+  { ssr: false },
 );
-const TestForm = lazy(() => import("@/test-components/shadcn/test-form"));
-const TestHoverCard = lazy(
+const TestForm = dynamic(() => import("@/test-components/shadcn/test-form"), {
+  ssr: false,
+});
+const TestHoverCard = dynamic(
   () => import("@/test-components/shadcn/test-hover-card"),
+  { ssr: false },
 );
-const TestInputOTP = lazy(
+const TestInputOTP = dynamic(
   () => import("@/test-components/shadcn/test-input-otp"),
+  { ssr: false },
 );
-const TestInput = lazy(() => import("@/test-components/shadcn/test-input"));
-const TestLabel = lazy(() => import("@/test-components/shadcn/test-label"));
-const TestMenubar = lazy(() => import("@/test-components/shadcn/test-menubar"));
-const TestNavigationMenu = lazy(
+const TestInput = dynamic(() => import("@/test-components/shadcn/test-input"), {
+  ssr: false,
+});
+const TestLabel = dynamic(() => import("@/test-components/shadcn/test-label"), {
+  ssr: false,
+});
+const TestMenubar = dynamic(
+  () => import("@/test-components/shadcn/test-menubar"),
+  { ssr: false },
+);
+const TestNavigationMenu = dynamic(
   () => import("@/test-components/shadcn/test-navigation-menu"),
+  { ssr: false },
 );
-const TestPagination = lazy(
+const TestPagination = dynamic(
   () => import("@/test-components/shadcn/test-pagination"),
+  { ssr: false },
 );
-const TestPaginationPrimitive = lazy(
+const TestPaginationPrimitive = dynamic(
   () => import("@/test-components/shadcn/test-pagination-primitive"),
+  { ssr: false },
 );
-const TestPopover = lazy(() => import("@/test-components/shadcn/test-popover"));
-const TestProgress = lazy(
+const TestPopover = dynamic(
+  () => import("@/test-components/shadcn/test-popover"),
+  { ssr: false },
+);
+const TestProgress = dynamic(
   () => import("@/test-components/shadcn/test-progress"),
+  { ssr: false },
 );
-const TestRatioGroup = lazy(
+const TestRatioGroup = dynamic(
   () => import("@/test-components/shadcn/test-ratio-group"),
+  { ssr: false },
 );
-const TestResizable = lazy(
+const TestResizable = dynamic(
   () => import("@/test-components/shadcn/test-resizable"),
+  { ssr: false },
 );
-const TestScrollArea = lazy(
+const TestScrollArea = dynamic(
   () => import("@/test-components/shadcn/test-scroll-area"),
+  { ssr: false },
 );
-const TestSelect = lazy(() => import("@/test-components/shadcn/test-select"));
-const TestSeparator = lazy(
+const TestSelect = dynamic(
+  () => import("@/test-components/shadcn/test-select"),
+  { ssr: false },
+);
+const TestSeparator = dynamic(
   () => import("@/test-components/shadcn/test-separator"),
+  { ssr: false },
 );
-const TestSheet = lazy(() => import("@/test-components/shadcn/test-sheet"));
-const TestSkeleton = lazy(
+const TestSheet = dynamic(() => import("@/test-components/shadcn/test-sheet"), {
+  ssr: false,
+});
+const TestSkeleton = dynamic(
   () => import("@/test-components/shadcn/test-skeleton"),
+  { ssr: false },
 );
-const TestSlider = lazy(() => import("@/test-components/shadcn/test-slider"));
-const TestSonner = lazy(() => import("@/test-components/shadcn/test-sonner"));
-const TestSwitch = lazy(() => import("@/test-components/shadcn/test-switch"));
-const TestTable = lazy(() => import("@/test-components/shadcn/test-table"));
-const TestTabs = lazy(() => import("@/test-components/shadcn/test-tabs"));
-const TestTextarea = lazy(
+const TestSlider = dynamic(
+  () => import("@/test-components/shadcn/test-slider"),
+  { ssr: false },
+);
+const TestSonner = dynamic(
+  () => import("@/test-components/shadcn/test-sonner"),
+  { ssr: false },
+);
+const TestSwitch = dynamic(
+  () => import("@/test-components/shadcn/test-switch"),
+  { ssr: false },
+);
+const TestTable = dynamic(() => import("@/test-components/shadcn/test-table"), {
+  ssr: false,
+});
+const TestTabs = dynamic(() => import("@/test-components/shadcn/test-tabs"), {
+  ssr: false,
+});
+const TestTextarea = dynamic(
   () => import("@/test-components/shadcn/test-textarea"),
+  { ssr: false },
 );
-const TestToggle = lazy(() => import("@/test-components/shadcn/test-toggle"));
-const TestTooltip = lazy(() => import("@/test-components/shadcn/test-tooltip"));
+const TestToggle = dynamic(
+  () => import("@/test-components/shadcn/test-toggle"),
+  { ssr: false },
+);
+const TestTooltip = dynamic(
+  () => import("@/test-components/shadcn/test-tooltip"),
+  { ssr: false },
+);
 
 const UIElements: {
   title: string;

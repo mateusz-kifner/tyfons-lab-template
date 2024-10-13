@@ -1,9 +1,10 @@
+import { useVirtualFormContext } from "./form";
 import type { VirtualFormField } from "./input-type";
 
 interface LiveFormJSONProps extends VirtualFormField<string> {}
 
 const LiveFormJSON = (props: LiveFormJSONProps) => {
-  // const { value } = props;
+  const { value } = useVirtualFormContext(props);
   return (
     <div className="flex-grow">
       <code
@@ -15,7 +16,7 @@ const LiveFormJSON = (props: LiveFormJSONProps) => {
           whiteSpace: "pre",
         }}
       >
-        {/* {JSON.stringify(value, null, 2)} */}
+        {JSON.stringify(value, null, 2)}
       </code>
     </div>
   );
