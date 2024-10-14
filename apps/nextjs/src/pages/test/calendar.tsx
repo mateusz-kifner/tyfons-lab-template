@@ -11,7 +11,7 @@ function TestCalendarPage() {
       <CardHeader>
         <CardTitle>Calendar</CardTitle>
       </CardHeader>
-      <CardContent className="flex gap-2 flex-col items-start">
+      <CardContent className="flex flex-col items-start gap-2">
         <div className="dark:bg-stone-950 ">
           <Calendar
             mode="single"

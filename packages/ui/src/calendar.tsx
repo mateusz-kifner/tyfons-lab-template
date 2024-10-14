@@ -1,7 +1,11 @@
 "use client";
 
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { DayPicker, type DropdownProps } from "react-day-picker";
+import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
+import {
+  DayPicker,
+  type DropdownOption,
+  type DropdownProps,
+} from "react-day-picker";
 
 import { cn } from ".";
 import { Button, buttonVariants } from "./button";
@@ -12,22 +16,54 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
-import { format, setMonth } from "date-fns";
 import { type ChangeEvent, useId, useRef, useState } from "react";
-import { Portal } from "@radix-ui/react-portal";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ScrollArea } from "./scroll-area";
+import { usePagination } from "@mantine/hooks";
 
 function CalendarDropdown({
   options,
   value,
-  onChange,
-  container,
   ...moreProps
 }: DropdownProps & { container: HTMLDivElement | null }) {
-  const [open, setOpen] = useState(false);
   const selectedOption = options?.find(({ value: v }) => v === value);
-  const uuid = useId();
+  const is_month_select = Number.isNaN(
+    Number.parseInt(selectedOption?.label as any),
+  );
+  if (options === undefined) return null;
+  if (is_month_select) {
+    return (
+      <CalendarMonthDropdown
+        options={options}
+        value={value}
+        selectedOption={selectedOption as DropdownOption}
+        {...moreProps}
+      />
+    );
+  }
+
+  return (
+    <CalendarYearDropdown
+      options={options}
+      value={value}
+      selectedOption={selectedOption as DropdownOption}
+      {...moreProps}
+    />
+  );
+}
+
+function CalendarMonthDropdown({
+  options,
+  value,
+  onChange,
+  container,
+  selectedOption,
+  ...moreProps
+}: DropdownProps & {
+  container: HTMLDivElement | null;
+  selectedOption: DropdownOption;
+}) {
+  const [open, setOpen] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
 
   return (
@@ -43,50 +79,139 @@ function CalendarDropdown({
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="absolute h-full w-full border-none"
+        className="absolute flex h-full w-full flex-col justify-start gap-2 border-none p-2 pt-4"
         container={container}
         hideOverlay
         hideCloseButton
       >
         <VisuallyHidden>
-          <DialogTitle>
-            {Number.isNaN(Number.parseInt(selectedOption?.label as any))
-              ? "Months select"
-              : "Year select"}
-          </DialogTitle>
+          <DialogTitle>Months select</DialogTitle>
           <DialogDescription />
         </VisuallyHidden>
-        <ScrollArea type="auto">
-          <div
-            className={cn(
-              "grid min-h-full grid-cols-3 gap-2",
-              (options?.length ?? 0) > 12 && "pr-3",
-            )}
+        <Button onClick={() => setOpen(false)} variant="ghost" className="h-7">
+          <IconX className="size-4" />
+        </Button>
+
+        <div className="grid grow grid-cols-3 gap-1">
+          {options?.map((option) => (
+            <Button
+              variant={option.value === value ? "secondary" : "ghost"}
+              key={option.value}
+              ref={option.value === value ? ref : undefined}
+              className="h-auto text-xs"
+              size="lg"
+              disabled={option.disabled}
+              onLoad={() => ref.current?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => {
+                const event = {
+                  target: { value: option.value },
+                } as unknown as ChangeEvent<HTMLSelectElement>;
+                onChange?.(event);
+                setOpen(false);
+              }}
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CalendarYearDropdown({
+  options,
+  value,
+  onChange,
+  container,
+  selectedOption,
+  ...moreProps
+}: DropdownProps & {
+  container: HTMLDivElement | null;
+  selectedOption: DropdownOption;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLButtonElement>(null);
+  const max_value =
+    ((options as any)[(options as any).length - 1].value as
+      | number
+      | undefined) ?? 0;
+  const min_value = ((options as any)[0].value as number | undefined) ?? 0;
+  console.log(selectedOption);
+  const [page, setPage] = useState(Math.floor(selectedOption.value / 10));
+  console.log(page);
+
+  const pageOptions = options?.filter(
+    (option) => option.value >= page * 10 && option.value < (page + 1) * 10,
+  );
+  console.log(value);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          className="h-7 font-medium text-sm first:rounded-r-none first:pr-2 last:rounded-l-none last:pl-2"
+          size="sm"
+          variant="ghost"
+          onClick={() => setOpen(!open)}
+        >
+          {selectedOption?.label}
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        className="absolute flex h-full w-full flex-col justify-start gap-2 border-none p-2 pt-4"
+        container={container}
+        hideOverlay
+        hideCloseButton
+      >
+        <VisuallyHidden>
+          <DialogTitle>Year select</DialogTitle>
+          <DialogDescription />
+        </VisuallyHidden>
+        <div className="flex justify-between gap-2">
+          <Button
+            onClick={() => setPage((p) => p - 1)}
+            variant="outline"
+            className="size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
           >
-            {options?.map((option) => (
-              <Button
-                variant={option.value === value ? "secondary" : "ghost"}
-                key={option.value}
-                ref={option.value === value ? ref : undefined}
-                size="lg"
-                className="text-xs"
-                disabled={option.disabled}
-                onLoad={() =>
-                  ref.current?.scrollIntoView({ behavior: "smooth" })
-                }
-                onClick={() => {
-                  const event = {
-                    target: { value: option.value },
-                  } as unknown as ChangeEvent<HTMLSelectElement>;
-                  onChange?.(event);
-                  setOpen(false);
-                }}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-        </ScrollArea>
+            <IconChevronLeft className="size-4" />
+          </Button>
+          <Button
+            onClick={() => setOpen(false)}
+            variant="ghost"
+            className="h-7 grow"
+          >
+            <IconX className="size-4" />
+          </Button>
+          <Button
+            onClick={() => setPage((p) => p + 1)}
+            variant="outline"
+            className="size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+          >
+            <IconChevronRight className="size-4" />
+          </Button>
+        </div>
+        <div className="grid grow grid-cols-2 gap-2">
+          {pageOptions?.map((option) => (
+            <Button
+              variant={option.value === value ? "secondary" : "ghost"}
+              key={option.value}
+              ref={option.value === value ? ref : undefined}
+              size="lg"
+              className="h-auto text-xs"
+              disabled={option.disabled}
+              onLoad={() => ref.current?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => {
+                const event = {
+                  target: { value: option.value },
+                } as unknown as ChangeEvent<HTMLSelectElement>;
+                onChange?.(event);
+                setOpen(false);
+              }}
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -102,7 +227,7 @@ function Calendar({
 }: CalendarProps) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="relative w-72" ref={ref}>
+    <div className="relative" ref={ref}>
       <DayPicker
         showOutsideDays={showOutsideDays}
         captionLayout="dropdown"
@@ -110,43 +235,55 @@ function Calendar({
         startMonth={new Date(1970, 12)}
         endMonth={new Date(2200, 1)}
         classNames={{
-          months: "relative",
-          month: "pt-9",
-          weekdays: "flex justify-around",
-          dropdowns: "flex absolute top-1 left-1/2 -translate-x-1/2",
-          nav: "absolute top-1 right-0 left-0 flex items-center justify-between",
-          button_next: cn(
-            buttonVariants({ variant: "outline" }),
-            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-          ),
+          months: "flex flex-col sm:flex-row gap-y-4 sm:gap-x-4 sm:gap-y-0",
+          month: "flex flex-col gap-y-4 pt-9",
+          month_caption: "flex justify-center  items-center",
+          dropdowns: "flex absolute top-4 left-1/2 -translate-x-1/2",
+          dropdown: "flex",
+          caption_label: "text-sm font-medium",
+          nav: "flex items-center absolute inset-x-0",
           button_previous: cn(
             buttonVariants({ variant: "outline" }),
-            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-50 left-2 top-1",
           ),
-          week: "flex justify-around",
+          button_next: cn(
+            buttonVariants({ variant: "outline" }),
+            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-50 right-2 top-1",
+          ),
+          month_grid: "w-full border-collapse space-y-1",
+          weekdays: "flex",
+          weekday:
+            "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
+          week: "flex w-full mt-2",
+          day: cn(
+            "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-primary/50 aria-selected:[&.day-outside]:bg-accent/50",
+            props.mode === "range"
+              ? "[&.day-range-end]:rounded-r-md [&.day-range-start]:rounded-l-md aria-selected:[&.day-range-end]:rounded-r-md first:aria-selected:rounded-l-md last:aria-selected:rounded-r-md"
+              : "aria-selected:rounded-md",
+          ),
           day_button: cn(
             buttonVariants({ variant: "ghost" }),
-            "h-9 w-9 p-0 font-normal aria-selected:opacity-100 dark:hover:bg-black/50 hover:bg-black/30   hover:text-white",
+            "size-8 p-0 font-normal",
           ),
-          range_end: "rounded-l-none",
-          range_start: "rounded-r-none",
+          range_start: "day-range-start",
+          range_end: "day-range-end",
           selected:
-            "rounded-md bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-          today: "rounded-md bg-accent text-accent-foreground",
+            "day-selected *:bg-primary *:text-primary-foreground *:hover:bg-primary *:hover:text-primary-foreground *:focus:bg-primary *:focus:text-primary-foreground *:opacity-100",
+          today: "*:bg-primary/50 *:text-accent-foreground",
           outside:
-            "rounded-md day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-          disabled: "rounded-md text-muted-foreground opacity-50",
+            "day-outside *:text-muted-foreground *:opacity-50 *:aria-selected:bg-accent/50 *:aria-selected:text-muted-foreground *:aria-selected:opacity-30",
+          disabled: "text-muted-foreground opacity-50",
           range_middle:
-            "rounded-none dark:aria-selected:bg-primary/30 aria-selected:bg-primary/50 aria-selected:text-primary-foreground",
+            "day-range-middle *:aria-selected:bg-transparent *:aria-selected:text-accent-foreground",
           hidden: "invisible",
           ...classNames,
         }}
         components={{
           Chevron: ({ ...props }) =>
             props.orientation === "left" ? (
-              <IconChevronLeft className="h-4 w-4" />
+              <IconChevronLeft className="size-4" />
             ) : (
-              <IconChevronRight className="h-4 w-4" />
+              <IconChevronRight className="size-4" />
             ),
           Dropdown: ({ ...props }) => (
             <CalendarDropdown {...props} container={ref.current} />
