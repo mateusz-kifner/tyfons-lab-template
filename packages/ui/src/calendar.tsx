@@ -190,8 +190,8 @@ function CalendarYearDropdown({
             <IconChevronRight className="size-4" />
           </Button>
         </div>
-        <div className="grid grow grid-cols-2 gap-2">
-          {pageOptions?.map((option) => (
+        <div dir="rtl" className="grid grow grid-cols-2 gap-2">
+          {pageOptions?.reverse()?.map((option) => (
             <Button
               variant={option.value === value ? "secondary" : "ghost"}
               key={option.value}
