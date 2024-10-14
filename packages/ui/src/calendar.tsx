@@ -5,10 +5,18 @@ import { DayPicker, type DropdownProps } from "react-day-picker";
 
 import { cn } from ".";
 import { Button, buttonVariants } from "./button";
-import { Dialog, DialogContent, DialogTrigger } from "./dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
 import { format, setMonth } from "date-fns";
-import { type ChangeEvent, useRef, useState } from "react";
+import { type ChangeEvent, useId, useRef, useState } from "react";
 import { Portal } from "@radix-ui/react-portal";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { ScrollArea } from "./scroll-area";
 
 function CalendarDropdown({
   options,
@@ -19,15 +27,14 @@ function CalendarDropdown({
 }: DropdownProps & { container: HTMLDivElement | null }) {
   const [open, setOpen] = useState(false);
   const selectedOption = options?.find(({ value: v }) => v === value);
-  const months = Array.from({ length: 12 }, (_, index) =>
-    format(setMonth(new Date(), index), "LLL"),
-  );
+  const uuid = useId();
+  const ref = useRef<HTMLButtonElement>(null);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="h-7 font-medium text-sm first:rounded-r-none first:pr-1 last:rounded-l-none last:pl-1"
+          className="h-7 font-medium text-sm first:rounded-r-none first:pr-2 last:rounded-l-none last:pl-2"
           size="sm"
           variant="ghost"
           onClick={() => setOpen(!open)}
@@ -36,28 +43,50 @@ function CalendarDropdown({
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="absolute grid h-full w-full grid-cols-3 border-none"
+        className="absolute h-full w-full border-none"
         container={container}
         hideOverlay
+        hideCloseButton
       >
-        {options?.map(({ label, disabled, value }) => (
-          <Button
-            variant="ghost"
-            key={value}
-            size="lg"
-            className="text-xs"
-            disabled={disabled}
-            onClick={() => {
-              const event = {
-                target: { value },
-              } as unknown as ChangeEvent<HTMLSelectElement>;
-              onChange?.(event);
-              setOpen(false);
-            }}
+        <VisuallyHidden>
+          <DialogTitle>
+            {Number.isNaN(Number.parseInt(selectedOption?.label as any))
+              ? "Months select"
+              : "Year select"}
+          </DialogTitle>
+          <DialogDescription />
+        </VisuallyHidden>
+        <ScrollArea type="auto">
+          <div
+            className={cn(
+              "grid min-h-full grid-cols-3 gap-2",
+              (options?.length ?? 0) > 12 && "pr-3",
+            )}
           >
-            {label}
-          </Button>
-        ))}
+            {options?.map((option) => (
+              <Button
+                variant={option.value === value ? "secondary" : "ghost"}
+                key={option.value}
+                ref={option.value === value ? ref : undefined}
+                size="lg"
+                className="text-xs"
+                disabled={option.disabled}
+                onLoad={() =>
+                  ref.current?.scrollIntoView({ behavior: "smooth" })
+                }
+                onClick={() => {
+                  const event = {
+                    target: { value: option.value },
+                  } as unknown as ChangeEvent<HTMLSelectElement>;
+                  onChange?.(event);
+                  setOpen(false);
+                }}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
@@ -73,19 +102,18 @@ function Calendar({
 }: CalendarProps) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative w-72" ref={ref}>
       <DayPicker
         showOutsideDays={showOutsideDays}
         captionLayout="dropdown"
         className={cn("p-3", className)}
+        startMonth={new Date(1970, 12)}
+        endMonth={new Date(2200, 1)}
         classNames={{
           months: "relative",
           month: "pt-9",
           weekdays: "flex justify-around",
           dropdowns: "flex absolute top-1 left-1/2 -translate-x-1/2",
-          // month_caption:
-          //   "absolute top-1 left-1/2 -translate-x-1/2 bg-red-500 h-7 w-44 flex items-center justify-center",
-          // // caption_label: "text-sm font-medium",
           nav: "absolute top-1 right-0 left-0 flex items-center justify-between",
           button_next: cn(
             buttonVariants({ variant: "outline" }),
@@ -98,9 +126,10 @@ function Calendar({
           week: "flex justify-around",
           day_button: cn(
             buttonVariants({ variant: "ghost" }),
-            "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+            "h-9 w-9 p-0 font-normal aria-selected:opacity-100 dark:hover:bg-black/50 hover:bg-black/30   hover:text-white",
           ),
-          range_end: "rounded-md range-end",
+          range_end: "rounded-l-none",
+          range_start: "rounded-r-none",
           selected:
             "rounded-md bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
           today: "rounded-md bg-accent text-accent-foreground",
@@ -108,7 +137,7 @@ function Calendar({
             "rounded-md day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
           disabled: "rounded-md text-muted-foreground opacity-50",
           range_middle:
-            "rounded-md aria-selected:bg-accent aria-selected:text-accent-foreground",
+            "rounded-none dark:aria-selected:bg-primary/30 aria-selected:bg-primary/50 aria-selected:text-primary-foreground",
           hidden: "invisible",
           ...classNames,
         }}
