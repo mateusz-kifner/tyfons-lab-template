@@ -122,19 +122,38 @@ function CalendarYearDropdown({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
   const uuid = useId();
+  const validOptions = options?.filter((option) => !option.disabled);
   const max_value =
-    ((options as any)[(options as any).length - 1].value as
+    ((validOptions as any)[(validOptions as any).length - 1].value as
       | number
-      | undefined) ?? 0;
-  const min_value = ((options as any)[0].value as number | undefined) ?? 0;
+      | undefined) ?? 2200;
+  const min_value =
+    ((validOptions as any)[0].value as number | undefined) ?? 1971;
   const [page, setPage] = useState(Math.floor(selectedOption.value / 10));
 
-  const pageOptions = options?.filter(
+  const pageOptions = validOptions?.filter(
     (option) => option.value >= page * 10 && option.value < (page + 1) * 10,
   );
-  console.log(value);
+
+  const disable_prev_page = page - 1 < Math.floor(min_value / 10);
+  const disable_next_page = page + 1 > Math.floor(max_value / 10);
+
+  const prevPage = () => {
+    if (disable_prev_page) return;
+    setPage((p) => p - 1);
+  };
+  const nextPage = () => {
+    if (disable_next_page) return;
+    setPage((p) => p + 1);
+  };
+
+  const openDialog = () => {
+    setOpen(true);
+    setPage(Math.floor(selectedOption.value / 10));
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={openDialog}>
       <DialogTrigger asChild>
         <Button
           className="h-7 font-medium text-sm first:rounded-r-none first:pr-2 last:rounded-l-none last:pl-2"
@@ -157,9 +176,10 @@ function CalendarYearDropdown({
         </VisuallyHidden>
         <div className="flex justify-between gap-2">
           <Button
-            onClick={() => setPage((p) => p - 1)}
+            onClick={prevPage}
             variant="outline"
             className="size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+            disabled={disable_prev_page}
           >
             <IconChevronLeft className="size-4" />
           </Button>
@@ -171,9 +191,10 @@ function CalendarYearDropdown({
             <IconX className="size-4" />
           </Button>
           <Button
-            onClick={() => setPage((p) => p + 1)}
+            onClick={nextPage}
             variant="outline"
             className="size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+            disabled={disable_next_page}
           >
             <IconChevronRight className="size-4" />
           </Button>
