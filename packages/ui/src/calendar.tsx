@@ -18,8 +18,6 @@ import {
 } from "./dialog";
 import { type ChangeEvent, useId, useRef, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { ScrollArea } from "./scroll-area";
-import { usePagination } from "@mantine/hooks";
 
 function CalendarDropdown({
   options,
@@ -31,19 +29,9 @@ function CalendarDropdown({
     Number.parseInt(selectedOption?.label as any),
   );
   if (options === undefined) return null;
-  if (is_month_select) {
-    return (
-      <CalendarMonthDropdown
-        options={options}
-        value={value}
-        selectedOption={selectedOption as DropdownOption}
-        {...moreProps}
-      />
-    );
-  }
-
+  const Elem = is_month_select ? CalendarMonthDropdown : CalendarYearDropdown;
   return (
-    <CalendarYearDropdown
+    <Elem
       options={options}
       value={value}
       selectedOption={selectedOption as DropdownOption}
@@ -65,6 +53,7 @@ function CalendarMonthDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
+  const uuid = useId();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -96,7 +85,7 @@ function CalendarMonthDropdown({
           {options?.map((option) => (
             <Button
               variant={option.value === value ? "secondary" : "ghost"}
-              key={option.value}
+              key={`${uuid}::${option.value}`}
               ref={option.value === value ? ref : undefined}
               className="h-auto text-xs"
               size="lg"
@@ -132,14 +121,13 @@ function CalendarYearDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
+  const uuid = useId();
   const max_value =
     ((options as any)[(options as any).length - 1].value as
       | number
       | undefined) ?? 0;
   const min_value = ((options as any)[0].value as number | undefined) ?? 0;
-  console.log(selectedOption);
   const [page, setPage] = useState(Math.floor(selectedOption.value / 10));
-  console.log(page);
 
   const pageOptions = options?.filter(
     (option) => option.value >= page * 10 && option.value < (page + 1) * 10,
@@ -194,7 +182,7 @@ function CalendarYearDropdown({
           {pageOptions?.reverse()?.map((option) => (
             <Button
               variant={option.value === value ? "secondary" : "ghost"}
-              key={option.value}
+              key={`${uuid}::${option.value}`}
               ref={option.value === value ? ref : undefined}
               size="lg"
               className="h-auto text-xs"
@@ -236,7 +224,7 @@ function Calendar({
         endMonth={new Date(2200, 1)}
         classNames={{
           months: "flex flex-col sm:flex-row gap-y-4 sm:gap-x-4 sm:gap-y-0",
-          month: "flex flex-col gap-y-4 pt-9",
+          month: "flex flex-col gap-y-2 pt-9",
           month_caption: "flex justify-center  items-center",
           dropdowns: "flex absolute top-4 left-1/2 -translate-x-1/2",
           dropdown: "flex",
@@ -244,17 +232,18 @@ function Calendar({
           nav: "flex items-center absolute inset-x-0",
           button_previous: cn(
             buttonVariants({ variant: "outline" }),
-            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-50 left-2 top-1",
+            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-10 left-2 top-1",
           ),
           button_next: cn(
             buttonVariants({ variant: "outline" }),
-            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-50 right-2 top-1",
+            "size-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute z-10 right-2 top-1",
           ),
           month_grid: "w-full border-collapse space-y-1",
-          weekdays: "flex",
+          weekdays: "flex space-x-1",
           weekday:
             "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-          week: "flex w-full mt-2",
+          week: "flex w-full gap-1",
+          weeks: "flex flex-col gap-1",
           day: cn(
             "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 aria-selected:bg-primary/50 aria-selected:[&.day-outside]:bg-accent/50",
             props.mode === "range"
@@ -265,16 +254,18 @@ function Calendar({
             buttonVariants({ variant: "ghost" }),
             "size-8 p-0 font-normal",
           ),
-          range_start: "day-range-start",
-          range_end: "day-range-end",
+          range_start:
+            "day-range-start before:absolute before:-right-0.5 before:top-0 before:w-0.5 before:bg-primary/50 before:bottom-0 [&.day-outside]:before:bg-accent/50",
+          range_end:
+            "day-range-end before:absolute [&.day-range-start]:before:bg-transparent before:-left-0.5 before:top-0 before:w-0.5 before:bg-primary/50 before:bottom-0 [&.day-outside]:before:bg-accent/50",
           selected:
             "day-selected *:bg-primary *:text-primary-foreground *:hover:bg-primary *:hover:text-primary-foreground *:focus:bg-primary *:focus:text-primary-foreground *:opacity-100",
-          today: "*:bg-primary/50 *:text-accent-foreground",
+          today: "*:bg-secondary *:text-secondary-foreground",
           outside:
             "day-outside *:text-muted-foreground *:opacity-50 *:aria-selected:bg-accent/50 *:aria-selected:text-muted-foreground *:aria-selected:opacity-30",
           disabled: "text-muted-foreground opacity-50",
           range_middle:
-            "day-range-middle *:aria-selected:bg-transparent *:aria-selected:text-accent-foreground",
+            "day-range-middle *:aria-selected:bg-transparent *:aria-selected:text-accent-foreground w-9 -mx-0.5",
           hidden: "invisible",
           ...classNames,
         }}
@@ -294,6 +285,7 @@ function Calendar({
     </div>
   );
 }
+
 Calendar.displayName = "Calendar";
 
 export { Calendar };
