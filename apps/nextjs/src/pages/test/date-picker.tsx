@@ -5,7 +5,7 @@ import { format, parse, parseISO } from "date-fns";
 import { Calendar } from "@acme/ui/calendar";
 import { Popover, PopoverAnchor, PopoverContent } from "@acme/ui/popover";
 import { Input } from "@acme/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useClickOutside } from "@mantine/hooks";
 
 const plDateRegex = /^(0{0,1}[1-9]|[12]\d|3[01])\.(0{0,1}[1-9]|1[0-2])\.\d{4}$/;
@@ -50,10 +50,16 @@ function convertToDate(dateStr: string) {
 
 export function DatePickerDemo() {
   const [date, setDate] = React.useState<string>("");
+
   const [open, setOpen] = useState(false);
   const ref = useClickOutside(() => setOpen(false));
 
   const { date: date_obj, warning, error } = convertDateWithValidation(date);
+  const [month, setMonth] = React.useState<Date>(date_obj ?? new Date());
+
+  useEffect(() => {
+    if (date_obj) setMonth(date_obj);
+  }, [date]);
 
   return (
     <div ref={ref} className="p-6">
@@ -80,6 +86,8 @@ export function DatePickerDemo() {
         >
           <Calendar
             mode="single"
+            month={month}
+            onMonthChange={setMonth}
             selected={date_obj}
             onSelect={(date) =>
               date ? setDate(format(date, "dd.MM.yyyy")) : setDate("")

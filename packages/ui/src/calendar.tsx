@@ -222,6 +222,7 @@ function Calendar({
         className={cn("p-3", className)}
         startMonth={new Date(1970, 12)}
         endMonth={new Date(2200, 1)}
+        autoFocus
         classNames={{
           months: "flex flex-col sm:flex-row gap-y-4 sm:gap-x-4 sm:gap-y-0",
           month: "flex flex-col gap-y-2 pt-9",
