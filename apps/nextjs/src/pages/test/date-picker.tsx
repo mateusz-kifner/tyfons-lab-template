@@ -19,7 +19,7 @@ function convertDateWithValidation(date_str: string) {
   if (!(plDateRegex.test(date_str) || isoDateOnlyRegex.test(date_str)))
     warning = true;
 
-  const date = convertToDate(date_str);
+  const date = !error && !warning ? convertToDate(date_str) : undefined;
   if (date === undefined) error = true;
 
   return { date, warning, error };
@@ -68,7 +68,10 @@ export function DatePickerDemo() {
           <Input
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            onFocus={() => setOpen(true)}
+            onFocus={(e) => {
+              setOpen(true);
+              e.target.focus();
+            }}
             className={
               warning
                 ? "focus-visible:ring-yellow-500"
@@ -88,6 +91,7 @@ export function DatePickerDemo() {
             mode="single"
             month={month}
             onMonthChange={setMonth}
+            autoFocus={false}
             selected={date_obj}
             onSelect={(date) =>
               date ? setDate(format(date, "dd.MM.yyyy")) : setDate("")
