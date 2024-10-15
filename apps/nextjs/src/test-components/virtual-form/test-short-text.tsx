@@ -1,4 +1,4 @@
-import VirtualFormShortText from "@acme/virtual-form/short-text";
+import VirtualFormShortText from "../../../../../packages/live-form/dist/src/short-text";
 
 function TestShortText(
   props: Record<string, any> & { name: string | number; label?: any },

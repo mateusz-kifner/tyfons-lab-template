@@ -12,42 +12,42 @@ import {
 import { IconBug, IconBugOff, IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@acme/ui";
 import { ThemeToggle } from "@acme/ui/theme";
-import VirtualForm from "../../../../../packages/virtual-form/dist/src/form";
-import TestVirtualForm from "@/test-components/virtual-form/test-virtual-form";
+import VirtualForm from "../../../../../packages/live-form/dist/src/form";
+import TestVirtualForm from "@/test-components/live-form/test-live-form";
 import { useLocalStorage } from "@mantine/hooks";
 import { Button } from "@acme/ui/button";
 import dynamic from "next/dynamic";
 
 const TestDate = dynamic(
-  () => import("@/test-components/virtual-form/test-date"),
+  () => import("@/test-components/live-form/test-date"),
   { ssr: false },
 );
 const TestDatetime = dynamic(
-  () => import("@/test-components/virtual-form/test-datetime"),
+  () => import("@/test-components/live-form/test-datetime"),
   { ssr: false },
 );
 const TestDebugInfo = dynamic(
-  () => import("@/test-components/virtual-form/test-debug-info"),
+  () => import("@/test-components/live-form/test-debug-info"),
   { ssr: false },
 );
 const TestJSON = dynamic(
-  () => import("@/test-components/virtual-form/test-json"),
+  () => import("@/test-components/live-form/test-json"),
   { ssr: false },
 );
 const TestSelect = dynamic(
-  () => import("@/test-components/virtual-form/test-select"),
+  () => import("@/test-components/live-form/test-select"),
   { ssr: false },
 );
 const TestShortText = dynamic(
-  () => import("@/test-components/virtual-form/test-short-text"),
+  () => import("@/test-components/live-form/test-short-text"),
   { ssr: false },
 );
 const TestSwitch = dynamic(
-  () => import("@/test-components/virtual-form/test-switch"),
+  () => import("@/test-components/live-form/test-switch"),
   { ssr: false },
 );
 const TestText = dynamic(
-  () => import("@/test-components/virtual-form/test-text"),
+  () => import("@/test-components/live-form/test-text"),
   { ssr: false },
 );
 
