@@ -1,14 +1,14 @@
 import { forwardRef, useEffect, useRef, type CSSProperties } from "react";
-import type { VirtualFormField } from "./input-type";
+import type { LiveFormField } from "./input-type";
 import { Label } from "@acme/ui/label";
 import { useMergedRef } from "@mantine/hooks";
-import { useVirtualFormContext } from "./form";
+import { useLiveFormContext } from "./form";
 import { cn } from "@acme/ui";
 
-interface VirtualFormTextProps extends VirtualFormField<string> {
+interface LiveFormTextProps extends LiveFormField<string> {
   style?: CSSProperties;
 }
-const VirtualFormText = forwardRef<HTMLTextAreaElement, VirtualFormTextProps>(
+const LiveFormText = forwardRef<HTMLTextAreaElement, LiveFormTextProps>(
   (props, ref) => {
     const {
       label,
@@ -22,7 +22,7 @@ const VirtualFormText = forwardRef<HTMLTextAreaElement, VirtualFormTextProps>(
       rightSection,
       name,
       ...moreProps
-    } = useVirtualFormContext(props);
+    } = useLiveFormContext(props);
 
     const setTextAreaHeight = (target: HTMLTextAreaElement) => {
       target.style.height = "0";
@@ -60,6 +60,6 @@ const VirtualFormText = forwardRef<HTMLTextAreaElement, VirtualFormTextProps>(
   },
 );
 
-VirtualFormText.displayName = "VirtualFormText";
+LiveFormText.displayName = "LiveFormText";
 
-export default VirtualFormText;
+export default LiveFormText;

@@ -9,16 +9,16 @@ import { Button } from "@acme/ui/button";
 import { Calendar } from "@acme/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
 import { type CSSProperties, useRef } from "react";
-import type { VirtualFormField } from "./input-type";
-import { useVirtualFormContext } from "./form";
+import type { LiveFormField } from "./input-type";
+import { useLiveFormContext } from "./form";
 import { getDateFromValue } from "./utils";
 import { Label } from "@acme/ui/label";
 
-interface VirtualFormDateProps extends VirtualFormField<string | null> {
+interface LiveFormDateProps extends LiveFormField<string | null> {
   style?: CSSProperties;
 }
 
-const VirtualFormDate = (props: VirtualFormDateProps) => {
+const LiveFormDate = (props: LiveFormDateProps) => {
   const {
     label,
     leftSection,
@@ -29,7 +29,7 @@ const VirtualFormDate = (props: VirtualFormDateProps) => {
     required,
     disabled,
     ...moreProps
-  } = useVirtualFormContext(props);
+  } = useLiveFormContext(props);
   const portalRef = useRef<HTMLDivElement>(null);
 
   const date = getDateFromValue(value);
@@ -74,4 +74,4 @@ const VirtualFormDate = (props: VirtualFormDateProps) => {
     </div>
   );
 };
-export default VirtualFormDate;
+export default LiveFormDate;

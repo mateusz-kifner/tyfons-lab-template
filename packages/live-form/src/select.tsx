@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type CSSProperties, forwardRef, useId } from "react";
-import type { VirtualFormField } from "./input-type";
+import type { LiveFormField } from "./input-type";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,7 @@ import {
 } from "@acme/ui/select";
 import { cn } from "@acme/ui";
 import { Label } from "@acme/ui/label";
-import { useVirtualFormContext } from "./form";
+import { useLiveFormContext } from "./form";
 
 //  RadixSelectProps {
 //   children?: React.ReactNode;
@@ -31,7 +31,7 @@ import { useVirtualFormContext } from "./form";
 //   required?: boolean;
 // }
 
-interface FormSelectProps extends VirtualFormField<string> {
+interface FormSelectProps extends LiveFormField<string> {
   style?: CSSProperties;
   options: string[];
   collapse?: boolean;
@@ -50,7 +50,7 @@ const FormSelect = forwardRef<HTMLInputElement, FormSelectProps>(
       required,
       label,
       ...moreProps
-    } = useVirtualFormContext(props);
+    } = useLiveFormContext(props);
     const uuid = useId();
 
     const t = { select: "Select" };

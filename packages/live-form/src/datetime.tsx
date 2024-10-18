@@ -9,12 +9,12 @@ import { Button } from "@acme/ui/button";
 import { Calendar } from "@acme/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
 import type { CSSProperties } from "react";
-import type { VirtualFormField } from "./input-type";
-import { useVirtualFormContext } from "./form";
+import type { LiveFormField } from "./input-type";
+import { useLiveFormContext } from "./form";
 import { getDateFromValue } from "./utils";
 import { Label } from "@acme/ui/label";
 
-interface FormDateTimeProps extends VirtualFormField<string | null> {
+interface FormDateTimeProps extends LiveFormField<string | null> {
   style?: CSSProperties;
 }
 
@@ -30,7 +30,7 @@ const FormDateTime = (props: FormDateTimeProps) => {
     leftSection,
     rightSection,
     name,
-  } = useVirtualFormContext(props);
+  } = useLiveFormContext(props);
 
   const date = getDateFromValue(value);
 

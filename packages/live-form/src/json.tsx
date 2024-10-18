@@ -1,10 +1,11 @@
-import { useVirtualFormContext } from "./form";
-import type { VirtualFormField } from "./input-type";
+import { useLiveFormContext } from "./form";
+import type { LiveFormField } from "./input-type";
 
-interface LiveFormJSONProps extends VirtualFormField<string> {}
+interface LiveFormJSONProps
+  extends LiveFormField<Record<string, any> | Array<any>> {}
 
 const LiveFormJSON = (props: LiveFormJSONProps) => {
-  const { value } = useVirtualFormContext(props);
+  const { value } = useLiveFormContext(props);
   return (
     <div className="flex-grow">
       <code

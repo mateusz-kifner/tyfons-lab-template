@@ -1,10 +1,10 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
-import type { VirtualFormField } from "./input-type";
+import type { LiveFormField } from "./input-type";
 import { cn } from "@acme/ui";
-import { useVirtualFormContext } from "./form";
+import { useLiveFormContext } from "./form";
 import { useForceUpdate, useLocalStorage } from "@mantine/hooks";
 
-interface FormDebugInfoProps extends VirtualFormField<string> {}
+interface FormDebugInfoProps extends LiveFormField<string> {}
 
 const FormDebugInfo = (props: FormDebugInfoProps) => {
   const {
@@ -17,7 +17,7 @@ const FormDebugInfo = (props: FormDebugInfoProps) => {
     leftSection,
     rightSection,
     ...moreProps
-  } = useVirtualFormContext(props);
+  } = useLiveFormContext(props);
 
   const [debug] = useLocalStorage({ key: "debug", defaultValue: "false" });
   if (debug !== "true") return null;

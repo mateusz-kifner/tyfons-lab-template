@@ -12,10 +12,15 @@ import {
 import { IconBug, IconBugOff, IconLoader2 } from "@tabler/icons-react";
 import { cn } from "@acme/ui";
 import { ThemeToggle } from "@acme/ui/theme";
-import TestVirtualForm from "@/test-components/live-form/test-virtual-form";
+import TestLiveForm from "@/test-components/live-form/test-virtual-form";
 import { useLocalStorage } from "@mantine/hooks";
 import { Button } from "@acme/ui/button";
 import dynamic from "next/dynamic";
+
+const TestColor = dynamic(
+  () => import("@/test-components/live-form/test-color"),
+  { ssr: false },
+);
 
 const TestDate = dynamic(
   () => import("@/test-components/live-form/test-date"),
@@ -63,6 +68,12 @@ const UIElements: {
   name: string | number;
   default: any;
 }[] = [
+  {
+    title: "Test Color",
+    Element: TestColor,
+    name: "testColor",
+    default: "#ff0000",
+  },
   {
     title: "Test Date",
     Element: TestDate,
@@ -114,7 +125,7 @@ const UIElements: {
   },
 ];
 
-function VirtualFormTestPage() {
+function LiveFormTestPage() {
   const uuid = useId();
   const [debug, setDebug] = useLocalStorage({
     key: "debug",
@@ -147,9 +158,9 @@ function VirtualFormTestPage() {
                 <IconLoader2 className="direction-reverse animate-spin" />
               }
             >
-              <TestVirtualForm defaultData={val.default} name={val.name}>
+              <TestLiveForm defaultData={val.default} name={val.name}>
                 <val.Element name="data" label={val.title} />
-              </TestVirtualForm>
+              </TestLiveForm>
             </Suspense>
           </CardContent>
         </Card>
@@ -158,4 +169,4 @@ function VirtualFormTestPage() {
   );
 }
 
-export default VirtualFormTestPage;
+export default LiveFormTestPage;

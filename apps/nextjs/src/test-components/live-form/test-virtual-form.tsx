@@ -1,8 +1,8 @@
-import VirtualForm from "@acme/live-form/form";
+import LiveForm from "@acme/live-form/form";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
-function TestVirtualForm({
+function TestLiveForm({
   children,
   defaultData,
   name,
@@ -10,7 +10,7 @@ function TestVirtualForm({
   const [data, setData] = useState({ data: defaultData });
 
   return (
-    <VirtualForm
+    <LiveForm
       data={data}
       onChange={(_, val) => {
         setData({ data: val });
@@ -18,8 +18,8 @@ function TestVirtualForm({
       }}
     >
       {children}
-    </VirtualForm>
+    </LiveForm>
   );
 }
 
-export default TestVirtualForm;
+export default TestLiveForm;
