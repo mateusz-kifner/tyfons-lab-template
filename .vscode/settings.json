@@ -17,5 +17,12 @@
     ["cva([^;]*);", "'([^']*)'"],
     ["cva([^;]*);", "\"([^\"]*)\""],
     ["cva([^;]*);", "\\`([^\\`]*)\\`"]
-  ]
+  ],
+  "files.exclude": {
+    "**/.next/": true,
+    "**/.turbo/": true,
+    "**/expo-env.d.ts": true,
+    "**/LICENSE": true,
+    "**/next-env.d.ts": true
+  }
 }
