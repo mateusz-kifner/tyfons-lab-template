@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@auth/core':
+      specifier: 0.35.3
+      version: 0.35.3
     '@mantine/hooks':
       specifier: 7.13.3
       version: 7.13.3
@@ -67,7 +70,7 @@ importers:
   apps/auth-proxy:
     dependencies:
       '@auth/core':
-        specifier: 0.35.3
+        specifier: 'catalog:'
         version: 0.35.3
     devDependencies:
       '@acme/tailwind-config':
@@ -317,7 +320,7 @@ importers:
         specifier: workspace:*
         version: link:../db
       '@auth/core':
-        specifier: 0.35.3
+        specifier: 'catalog:'
         version: 0.35.3
       '@auth/drizzle-adapter':
         specifier: 1.7.1

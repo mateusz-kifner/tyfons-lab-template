@@ -59,6 +59,7 @@ const VirtualFormSwitch = (props: VirtualFormSwitchProps) => {
         <div
           className={editableSwitchVariants({
             variant,
+            className: "bg-background",
           })}
           data-state={(value ?? false) ? "checked" : "unchecked"}
         >

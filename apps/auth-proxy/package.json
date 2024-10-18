@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/core": "0.35.3"
+    "@auth/core": "catalog:"
   },
   "devDependencies": {
     "@acme/tailwind-config": "workspace:*",
