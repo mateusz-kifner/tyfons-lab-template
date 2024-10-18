@@ -30,7 +30,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "drizzle-orm": "0.35.1",
+    "drizzle-orm": "0.35.2",
     "drizzle-zod": "0.5.1",
     "postgres": "3.4.4",
     "zod": "catalog:"

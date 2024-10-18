@@ -1,0 +1,41 @@
+{
+  "name": "@acme/remix",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm with-env remix vite:build",
+    "dev": "pnpm with-env remix vite:dev",
+    "format": "biome format .",
+    "lint": "biome lint .",
+    "start": "pnpm with-env remix-serve ./build/server/index.js",
+    "typecheck": "tsc",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@acme/ui": "workspace:*",
+    "@mantine/hooks": "7.13.3",
+    "@remix-run/node": "2.13.1",
+    "@remix-run/react": "2.13.1",
+    "@remix-run/serve": "2.13.1",
+    "isbot": "4.4.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@acme/tailwind-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "@remix-run/dev": "2.13.1",
+    "@types/react": "18.3.11",
+    "@types/react-dom": "18.3.1",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.14",
+    "typescript": "5.6.3",
+    "vite": "5.4.9",
+    "vite-tsconfig-paths": "4.3.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,9 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { ThemeProvider, useTheme } from "next-themes";
-
 import { Button } from "./button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +11,8 @@ import {
 } from "./dropdown-menu";
 import useColorScheme, { colorSchemes } from "./useColorScheme";
 import { useId } from "react";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import { IconSun, IconMoon } from "@tabler/icons-react";
+import useTheme from "./useTheme";
 
 function ThemeToggle() {
   const { setTheme } = useTheme();
@@ -39,18 +38,15 @@ function ThemeToggle() {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setTheme?.("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setTheme?.("dark")}>
           Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
-export { ThemeProvider, ThemeToggle };
+export { ThemeToggle };
