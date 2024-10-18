@@ -1,4 +1,4 @@
-import VirtualFormSwitch from "../../../../../packages/live-form/dist/src/switch";
+import VirtualFormSwitch from "@acme/live-form/switch";
 
 function TestSwitch(
   props: Record<string, any> & { name: string | number; label?: any },

@@ -1,4 +1,4 @@
-import VirtualFormDate from "../../../../../packages/live-form/dist/src/date";
+import VirtualFormDate from "@acme/live-form/date";
 
 function TestDate(
   props: Record<string, any> & { name: string | number; label?: any },

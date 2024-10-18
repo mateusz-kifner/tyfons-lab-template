@@ -1,4 +1,4 @@
-import VirtualFormText from "../../../../../packages/live-form/dist/src/text";
+import VirtualFormText from "@acme/live-form/text";
 
 function TestText(
   props: Record<string, any> & { name: string | number; label?: any },

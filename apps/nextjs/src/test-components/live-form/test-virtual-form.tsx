@@ -1,4 +1,4 @@
-import VirtualForm from "../../../../../packages/live-form/dist/src/form";
+import VirtualForm from "@acme/live-form/form";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 

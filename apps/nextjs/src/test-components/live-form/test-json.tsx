@@ -1,4 +1,4 @@
-import VirtualFormJSON from "../../../../../packages/live-form/dist/src/json";
+import VirtualFormJSON from "@acme/live-form/json";
 
 function TestJSON(
   props: Record<string, any> & { name: string | number; label?: any },

@@ -1,4 +1,4 @@
-import VirtualFormSelect from "../../../../../packages/live-form/dist/src/select";
+import VirtualFormSelect from "@acme/live-form/select";
 
 function TestSelect(
   props: Record<string, any> & { name: string | number; label?: any },
