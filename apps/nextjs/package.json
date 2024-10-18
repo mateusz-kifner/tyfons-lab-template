@@ -19,8 +19,7 @@
     "@acme/db": "workspace:*",
     "@acme/live-form": "workspace:*",
     "@acme/ui": "workspace:*",
-    "@acme/validators": "workspace:*",
-    "@mantine/hooks": "7.13.3",
+    "@mantine/hooks": "catalog:",
     "@t3-oss/env-nextjs": "0.11.1",
     "@tabler/icons-react": "3.19.0",
     "@tanstack/react-query": "catalog:",
@@ -31,7 +30,7 @@
     "next": "14.2.15",
     "react": "catalog:react18",
     "react-dom": "catalog:react18",
-    "superjson": "2.2.1",
+    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
