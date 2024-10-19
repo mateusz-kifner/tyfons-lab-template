@@ -5,73 +5,131 @@ import { format } from "date-fns";
 import { IconCalendar } from "@tabler/icons-react";
 
 import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
 import { Calendar } from "@acme/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
-import { type CSSProperties, useRef } from "react";
+import { Popover, PopoverAnchor, PopoverContent } from "@acme/ui/popover";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { LiveFormField } from "./input-type";
 import { useLiveFormContext } from "./form";
-import { getDateFromValue } from "./utils";
+import { convertDateWithValidation, getDateFromValue } from "./utils";
+import { useClickOutside } from "@mantine/hooks";
 import { Label } from "@acme/ui/label";
 
-interface LiveFormDateProps extends LiveFormField<string | null> {
+interface FormDateProps extends LiveFormField<string | null> {
   style?: CSSProperties;
 }
 
-const LiveFormDate = (props: LiveFormDateProps) => {
+const FormDate = (props: FormDateProps) => {
   const {
     label,
-    leftSection,
-    rightSection,
-    name,
     value,
     onChange,
-    required,
     disabled,
-    ...moreProps
+    required,
+    style,
+    className,
+    leftSection = <IconCalendar />,
+    rightSection,
+    name,
   } = useLiveFormContext(props);
-  const portalRef = useRef<HTMLDivElement>(null);
 
-  const date = getDateFromValue(value);
+  const [open, setOpen] = useState(false);
+  const ref = useClickOutside(() => setOpen(false));
+
+  const { date: date_obj, error } = convertDateWithValidation(value ?? "");
+  const [month, setMonth] = React.useState<Date>(date_obj ?? new Date());
+
+  useEffect(() => {
+    if (date_obj) setMonth(date_obj);
+  }, [value]);
 
   return (
-    <div className="flex w-full grow flex-col">
-      <div ref={portalRef} />
+    <div ref={ref}>
       <Label label={label} copyValue={value} required={required} />
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className="justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
+
+      <Popover open={open}>
+        <PopoverAnchor asChild>
+          <div
+            data-state={open ? "open" : "closed"}
+            className={cn(
+              "flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring data-[state=open]:ring-2 dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500",
+              error
+                ? "has-[:focus-visible]:ring-yellow-500 data-[state=open]:ring-yellow-500"
+                : undefined,
+            )}
           >
-            {leftSection ? leftSection : <IconCalendar />}
-            <span
+            {!!leftSection && leftSection}
+            <input
+              type="text"
+              disabled={disabled}
+              value={value}
               className={cn(
-                "grow text-foreground",
-                !date && "text-muted-foreground",
+                "flex h-10 w-full bg-transparent text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200",
               )}
-            >
-              {date ? format(date, "dd.MM.yyyy") : "Pick a date"}
-            </span>
-            {rightSection && rightSection}
-          </Button>
-        </PopoverTrigger>
+              ref={ref}
+              onFocus={(e) => {
+                setOpen(true);
+                e.target.focus();
+              }}
+              onChange={(e) => onChange?.(e.target.value)}
+              // {...moreProps}
+            />
+            {!!rightSection && rightSection}
+          </div>
+        </PopoverAnchor>
         <PopoverContent
           className="w-auto p-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          container={ref.current}
           align="start"
-          container={portalRef.current}
         >
           <Calendar
             mode="single"
-            selected={date}
+            month={month}
+            onMonthChange={setMonth}
+            autoFocus={false}
+            selected={date_obj}
             onSelect={(date) =>
-              date ? onChange?.(date?.toISOString()) : onChange?.(null)
+              date ? onChange(format(date, "dd.MM.yyyy")) : onChange("")
             }
-            {...moreProps}
           />
         </PopoverContent>
       </Popover>
     </div>
   );
 };
-export default LiveFormDate;
+
+export default FormDate;
+
+// return (
+//   <div className="flex w-full grow flex-col">
+//     <Label label={label} copyValue={value} required={required} />
+//     <Popover>
+//       <PopoverTrigger asChild>
+//         <Button
+//           variant={"outline"}
+//           className="grow justify-start gap-1 px-2 text-left font-normal text-gray-300 dark:text-stone-600"
+//         >
+//           {leftSection ? leftSection : <IconCalendar />}
+//           <span
+//             className={cn(
+//               "grow text-foreground",
+//               !date && "text-muted-foreground",
+//             )}
+//           >
+//             {date ? format(date, "dd.MM.yyyy") : "Pick a date"}
+//           </span>
+//           {rightSection && rightSection}
+//         </Button>
+//       </PopoverTrigger>
+//       <PopoverContent className="w-auto p-0" align="start">
+//         <Calendar
+//           mode="single"
+//           selected={date}
+//           onSelect={(date) =>
+//             date ? onChange?.(date.toISOString()) : onChange?.(null)
+//           }
+//         />
+//       </PopoverContent>
+//     </Popover>
+//   </div>
+// );
