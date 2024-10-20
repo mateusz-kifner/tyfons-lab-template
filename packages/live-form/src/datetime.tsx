@@ -65,7 +65,6 @@ const FormDateTime = (props: FormDateTimeProps) => {
               className={cn(
                 "flex h-10 w-full bg-transparent text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200",
               )}
-              ref={ref}
               onFocus={(e) => {
                 setOpen(true);
                 e.target.focus();
