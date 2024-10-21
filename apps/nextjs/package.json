@@ -12,7 +12,7 @@
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "test": "pnpm playwright test"
+    "test": "pnpm with-env pnpm playwright test"
   },
   "dependencies": {
     "@acme/api": "workspace:*",
