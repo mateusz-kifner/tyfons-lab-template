@@ -76,8 +76,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     !!value && value.length > 3 ? value : null,
   );
 
-  const ref = useClickOutside(() => setFocus(false));
-
+  // const ref = useClickOutside(() => setFocus(false));
   const colorTextObj = tinycolor(colorText ?? "");
   const colorTextHSV = colorTextObj.toHsv();
   const [color, setColor] = useState({
@@ -85,13 +84,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     h: colorTextHSV.h / 360,
   });
 
-  const [focus, setFocus] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // const colorName = useMemo(
-  //   () => (colorText !== null ? getColorNameFromHex(colorText) : ""),
-  //   [colorText]
-  // );
 
   const setColorViaString = (val: string) => {
     setColorText(val);
@@ -140,28 +133,15 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
     <div
       className="flex-grow"
-      onClick={() => !disabled && setFocus(true)}
-      onFocus={() => !disabled && setFocus(true)}
-      ref={ref}
+      // onClick={() => !disabled && setFocus(true)}
+      // onFocus={() => !disabled && setFocus(true)}
+      // ref={ref}
     >
       <Label
         label={label}
         copyValue={colorText ?? ""}
         htmlFor={`inputColor_${uuid}`}
       />
-      {/* <DisplayCell
-        className={!colorTextObj.isValid() ? "border-red-500" : ""}
-        leftSection={
-          leftSection ? (
-            leftSection
-          ) : (
-            <div
-              className="before:-z-10 relative h-6 w-6 rounded-full before:absolute before:top-[0.0625rem] before:left-[0.0625rem] before:h-[1.375rem] before:w-[1.375rem] before:rounded-full before:bg-white"
-              style={{ background: colorText ?? "" }}
-            />
-          )
-        }
-        rightSection={*/}
       <Popover onOpenChange={onLoseFocus} modal={true}>
         <PopoverTrigger
           className={cn(
@@ -169,13 +149,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
             "h-8 w-8 text-stone-900 dark:text-stone-200",
           )}
         >
-          {rightSection ? (
-            rightSection
-          ) : (
-            // <div className="flex h-11 items-center justify-center">
-            <IconColorSwatch />
-            // </div>
-          )}
+          {rightSection ? rightSection : <IconColorSwatch />}
         </PopoverTrigger>
         <PopoverContent
           align="end"
@@ -185,9 +159,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
           <ColorPicker value={color} onChange={setColorViaHSVObj} />
         </PopoverContent>
       </Popover>
-      {/*   }
-         focus={focus}
-       > */}
+
       <input
         type="text"
         autoCorrect="false"
