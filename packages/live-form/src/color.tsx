@@ -5,6 +5,7 @@ import { useClickOutside } from "@mantine/hooks";
 import { buttonVariants } from "@acme/ui/button";
 import ColorPicker from "@acme/ui/color-picker";
 import { Label } from "@acme/ui/label";
+
 import {
   Popover,
   PopoverAnchor,
@@ -78,12 +79,12 @@ const LiveFormColor = (props: LiveFormColorProps) => {
   } = useLiveFormContext(props);
   const [open, setOpen] = useState(false);
   const uuid = useId();
-  const [colorText, setColorText] = useState<string | null>(
-    !!value && value.length > 3 ? value : null,
-  );
+  const ref = useClickOutside(() => setOpen(false));
 
-  // const ref = useClickOutside(() => setFocus(false));
-  const colorTextObj = tinycolor(colorText ?? "");
+  // const [colorText, setColorText] = useState<string | null>(
+  //   !!value && value.length > 3 ? value : null,
+  // );
+  const colorTextObj = tinycolor(value ?? "");
   const colorTextHSV = colorTextObj.toHsv();
   const [color, setColor] = useState({
     ...colorTextHSV,
@@ -93,6 +94,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const setColorViaString = (val: string) => {
+    onChange(val);
     onChange(val);
     const valHSV = tinycolor(val).toHsv();
     setColor((prev) => (equalHSV(valHSV, prev) ? prev : valHSV));
@@ -105,9 +107,28 @@ const LiveFormColor = (props: LiveFormColorProps) => {
       hex = hex.substring(0, 7);
     }
     onChange(hex);
+    onChange(hex);
     setColor((prev) => (equalHSV(val, prev) ? prev : val));
   };
 
+  // const onLoseFocus = () => {
+  //   if (colorText !== value) {
+  //     if (!colorText || colorText === null) {
+  //       onChange?.(undefined);
+  //       setColorText(null);
+  //       return;
+  //     }
+  //     const colorObj = tinycolor(colorText);
+  //     if (colorObj.isValid()) {
+  //       let hex = colorObj.toHex8String();
+  //       if (hex.substring(7) === "ff") {
+  //         hex = hex.substring(0, 7);
+  //       }
+  //       onChange?.(hex);
+  //       setColorText(hex);
+  //     }
+  //   }
+  // };
   // const onLoseFocus = () => {
   //   if (colorText !== value) {
   //     if (!colorText || colorText === null) {
@@ -134,6 +155,13 @@ const LiveFormColor = (props: LiveFormColorProps) => {
   //     setColorViaHSVObj(valueHSV);
   //   }
   // }, [value]);
+  // useEffect(() => {
+  //   const valueObj = tinycolor(value);
+  //   const valueHSV = { ...valueObj.toHsv(), h: valueObj.toHsv().h / 360 };
+  //   if (equalHSV(valueHSV, color)) {
+  //     setColorViaHSVObj(valueHSV);
+  //   }
+  // }, [value]);
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
@@ -143,118 +171,48 @@ const LiveFormColor = (props: LiveFormColorProps) => {
       // onFocus={() => !disabled && setFocus(true)}
       // ref={ref}
     >
-      <Label
-        label={label}
-        copyValue={colorText ?? ""}
-        htmlFor={`inputColor_${uuid}`}
-      />
-      <Popover onOpenChange={setOpen} open={open} modal={true}>
-        <PopoverTrigger
-          className={cn(
-            buttonVariants({ size: "icon", variant: "ghost" }),
-            "h-8 w-8 text-stone-900 dark:text-stone-200",
-          )}
-        >
-          {rightSection ? rightSection : <IconColorSwatch />}
-        </PopoverTrigger>
+      <Label label={label} copyValue={value} required={required} />
+      <Popover open={open}>
+        <PopoverAnchor asChild>
+          <div
+            data-state={open ? "open" : "closed"}
+            className={cn(
+              "flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-2 text-gray-300 text-sm ring-offset-background file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 has-[:focus-visible]:text-stone-400 has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring data-[state=open]:ring-2 dark:text-stone-600 dark:has-[:focus-visible]:text-stone-500",
+              // error
+              //   ? "has-[:focus-visible]:ring-yellow-500 data-[state=open]:ring-yellow-500"
+              //   : undefined,
+            )}
+          >
+            {!!leftSection && leftSection}
+            <input
+              type="text"
+              disabled={disabled}
+              value={value}
+              className={cn(
+                "flex h-10 w-full bg-transparent text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200",
+              )}
+              onFocus={(e) => {
+                setOpen(true);
+                e.target.focus();
+              }}
+              onChange={(e) => setColorViaString(e.target.value)}
+              // {...moreProps}
+            />
+            {!!rightSection && rightSection}
+          </div>
+        </PopoverAnchor>
         <PopoverContent
           onOpenAutoFocus={(e) => e.preventDefault()}
-          // container={ref.current}
+          container={ref.current}
           align="start"
           sideOffset={5}
-          className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800 p-0"
+          className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 p-0 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800"
         >
           <ColorPicker value={color} onChange={setColorViaHSVObj} />
         </PopoverContent>
       </Popover>
-
-      <input
-        type="text"
-        autoCorrect="false"
-        spellCheck="false"
-        id={`inputColor_${uuid}`}
-        name={`inputColor_${uuid}`}
-        value={colorText ?? ""}
-        onChange={(e) => setColorViaString(e.target.value)}
-        className={
-          "w-full resize-none whitespace-pre-line break-words bg-transparent py-1 text-sm outline-none focus-visible:border-transparent focus-visible:outline-none data-disabled:text-gray-500 dark:data-disabled:text-gray-500"
-        }
-        readOnly={disabled}
-        required={required}
-        autoComplete="off"
-        ref={inputRef}
-      />
     </div>
   );
-  //   // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
-  //   <div
-  //     className="flex-grow"
-  //     // onClick={() => !disabled && setFocus(true)}
-  //     // onFocus={() => !disabled && setFocus(true)}
-  //     // ref={ref}
-  //   >
-  //     <Label
-  //       label={label}
-  //       copyValue={colorText ?? ""}
-  //       htmlFor={`inputColor_${uuid}`}
-  //     />
-  //     {/* <DisplayCell
-  //       className={!colorTextObj.isValid() ? "border-red-500" : ""}
-  //       leftSection={
-  //         leftSection ? (
-  //           leftSection
-  //         ) : (
-  //           <div
-  //             className="before:-z-10 relative h-6 w-6 rounded-full before:absolute before:top-[0.0625rem] before:left-[0.0625rem] before:h-[1.375rem] before:w-[1.375rem] before:rounded-full before:bg-white"
-  //             style={{ background: colorText ?? "" }}
-  //           />
-  //         )
-  //       }
-  //       rightSection={*/}
-  //     <Popover onOpenChange={setOpen} open={open} modal={true}>
-  //       <PopoverTrigger
-  //         className={cn(
-  //           buttonVariants({ size: "icon", variant: "ghost" }),
-  //           "h-8 w-8 text-stone-900 dark:text-stone-200",
-  //         )}
-  //       >
-  //         {rightSection ? (
-  //           rightSection
-  //         ) : (
-  //           // <div className="flex h-11 items-center justify-center">
-  //           <IconColorSwatch />
-  //           // </div>
-  //         )}
-  //       </PopoverTrigger>
-  //       <PopoverContent
-  //         align="end"
-  //         sideOffset={5}
-  //         className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800"
-  //       >
-  //         <ColorPicker value={color} onChange={setColorViaHSVObj} />
-  //       </PopoverContent>
-  //     </Popover>
-  //     {/*   }
-  //        focus={focus}
-  //      > */}
-  //     <input
-  //       type="text"
-  //       autoCorrect="false"
-  //       spellCheck="false"
-  //       id={`inputColor_${uuid}`}
-  //       name={`inputColor_${uuid}`}
-  //       value={colorText ?? ""}
-  //       onChange={(e) => setColorViaString(e.target.value)}
-  //       className={
-  //         "w-full resize-none whitespace-pre-line break-words bg-transparent py-1 text-sm outline-none focus-visible:border-transparent focus-visible:outline-none data-disabled:text-gray-500 dark:data-disabled:text-gray-500"
-  //       }
-  //       readOnly={disabled}
-  //       required={required}
-  //       autoComplete="off"
-  //       ref={inputRef}
-  //     />
-  //   </div>
-  // );
 };
 
 export default LiveFormColor;
