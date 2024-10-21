@@ -5,7 +5,12 @@ import { useClickOutside } from "@mantine/hooks";
 import { buttonVariants } from "@acme/ui/button";
 import ColorPicker from "@acme/ui/color-picker";
 import { Label } from "@acme/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@acme/ui/popover";
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@acme/ui/popover";
 import { cn } from "@acme/ui";
 import { IconColorSwatch } from "@tabler/icons-react";
 import tinycolor, { type ColorFormats } from "tinycolor2";
@@ -67,10 +72,11 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     disabled,
     required,
     // style,
-    leftSection,
+    leftSection = <IconColorSwatch />,
     rightSection,
     // keyName,
   } = useLiveFormContext(props);
+  const [open, setOpen] = useState(false);
   const uuid = useId();
   const [colorText, setColorText] = useState<string | null>(
     !!value && value.length > 3 ? value : null,
@@ -87,7 +93,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const setColorViaString = (val: string) => {
-    setColorText(val);
+    onChange(val);
     const valHSV = tinycolor(val).toHsv();
     setColor((prev) => (equalHSV(valHSV, prev) ? prev : valHSV));
   };
@@ -98,36 +104,36 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     if (hex.substring(7) === "ff") {
       hex = hex.substring(0, 7);
     }
-    setColorText(hex);
+    onChange(hex);
     setColor((prev) => (equalHSV(val, prev) ? prev : val));
   };
 
-  const onLoseFocus = () => {
-    if (colorText !== value) {
-      if (!colorText || colorText === null) {
-        onChange?.(undefined);
-        setColorText(null);
-        return;
-      }
-      const colorObj = tinycolor(colorText);
-      if (colorObj.isValid()) {
-        let hex = colorObj.toHex8String();
-        if (hex.substring(7) === "ff") {
-          hex = hex.substring(0, 7);
-        }
-        onChange?.(hex);
-        setColorText(hex);
-      }
-    }
-  };
+  // const onLoseFocus = () => {
+  //   if (colorText !== value) {
+  //     if (!colorText || colorText === null) {
+  //       onChange?.(undefined);
+  //       setColorText(null);
+  //       return;
+  //     }
+  //     const colorObj = tinycolor(colorText);
+  //     if (colorObj.isValid()) {
+  //       let hex = colorObj.toHex8String();
+  //       if (hex.substring(7) === "ff") {
+  //         hex = hex.substring(0, 7);
+  //       }
+  //       onChange?.(hex);
+  //       setColorText(hex);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    const valueObj = tinycolor(value);
-    const valueHSV = { ...valueObj.toHsv(), h: valueObj.toHsv().h / 360 };
-    if (equalHSV(valueHSV, color)) {
-      setColorViaHSVObj(valueHSV);
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   const valueObj = tinycolor(value);
+  //   const valueHSV = { ...valueObj.toHsv(), h: valueObj.toHsv().h / 360 };
+  //   if (equalHSV(valueHSV, color)) {
+  //     setColorViaHSVObj(valueHSV);
+  //   }
+  // }, [value]);
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
@@ -142,7 +148,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
         copyValue={colorText ?? ""}
         htmlFor={`inputColor_${uuid}`}
       />
-      <Popover onOpenChange={onLoseFocus} modal={true}>
+      <Popover onOpenChange={setOpen} open={open} modal={true}>
         <PopoverTrigger
           className={cn(
             buttonVariants({ size: "icon", variant: "ghost" }),
@@ -152,9 +158,11 @@ const LiveFormColor = (props: LiveFormColorProps) => {
           {rightSection ? rightSection : <IconColorSwatch />}
         </PopoverTrigger>
         <PopoverContent
-          align="end"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          // container={ref.current}
+          align="start"
           sideOffset={5}
-          className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800"
+          className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800 p-0"
         >
           <ColorPicker value={color} onChange={setColorViaHSVObj} />
         </PopoverContent>
@@ -178,6 +186,75 @@ const LiveFormColor = (props: LiveFormColorProps) => {
       />
     </div>
   );
+  //   // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
+  //   <div
+  //     className="flex-grow"
+  //     // onClick={() => !disabled && setFocus(true)}
+  //     // onFocus={() => !disabled && setFocus(true)}
+  //     // ref={ref}
+  //   >
+  //     <Label
+  //       label={label}
+  //       copyValue={colorText ?? ""}
+  //       htmlFor={`inputColor_${uuid}`}
+  //     />
+  //     {/* <DisplayCell
+  //       className={!colorTextObj.isValid() ? "border-red-500" : ""}
+  //       leftSection={
+  //         leftSection ? (
+  //           leftSection
+  //         ) : (
+  //           <div
+  //             className="before:-z-10 relative h-6 w-6 rounded-full before:absolute before:top-[0.0625rem] before:left-[0.0625rem] before:h-[1.375rem] before:w-[1.375rem] before:rounded-full before:bg-white"
+  //             style={{ background: colorText ?? "" }}
+  //           />
+  //         )
+  //       }
+  //       rightSection={*/}
+  //     <Popover onOpenChange={setOpen} open={open} modal={true}>
+  //       <PopoverTrigger
+  //         className={cn(
+  //           buttonVariants({ size: "icon", variant: "ghost" }),
+  //           "h-8 w-8 text-stone-900 dark:text-stone-200",
+  //         )}
+  //       >
+  //         {rightSection ? (
+  //           rightSection
+  //         ) : (
+  //           // <div className="flex h-11 items-center justify-center">
+  //           <IconColorSwatch />
+  //           // </div>
+  //         )}
+  //       </PopoverTrigger>
+  //       <PopoverContent
+  //         align="end"
+  //         sideOffset={5}
+  //         className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800"
+  //       >
+  //         <ColorPicker value={color} onChange={setColorViaHSVObj} />
+  //       </PopoverContent>
+  //     </Popover>
+  //     {/*   }
+  //        focus={focus}
+  //      > */}
+  //     <input
+  //       type="text"
+  //       autoCorrect="false"
+  //       spellCheck="false"
+  //       id={`inputColor_${uuid}`}
+  //       name={`inputColor_${uuid}`}
+  //       value={colorText ?? ""}
+  //       onChange={(e) => setColorViaString(e.target.value)}
+  //       className={
+  //         "w-full resize-none whitespace-pre-line break-words bg-transparent py-1 text-sm outline-none focus-visible:border-transparent focus-visible:outline-none data-disabled:text-gray-500 dark:data-disabled:text-gray-500"
+  //       }
+  //       readOnly={disabled}
+  //       required={required}
+  //       autoComplete="off"
+  //       ref={inputRef}
+  //     />
+  //   </div>
+  // );
 };
 
 export default LiveFormColor;

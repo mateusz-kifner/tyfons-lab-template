@@ -32,6 +32,7 @@ const LiveFormShortText = forwardRef<HTMLInputElement, LiveFormShortTextProps>(
             type="text"
             disabled={disabled}
             // required={required}
+            value={value}
             className="flex h-10 w-full bg-transparent text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200"
             ref={ref}
             onChange={(e) => onChange?.(e.target.value)}

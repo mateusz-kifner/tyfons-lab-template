@@ -47,6 +47,7 @@ const LiveFormText = forwardRef<HTMLTextAreaElement, LiveFormTextProps>(
           <textarea
             disabled={disabled}
             // required={required}
+            value={value}
             className="flex w-full resize-none overflow-hidden whitespace-pre-line break-words bg-transparent pt-[0.5625rem] pb-2 text-sm text-stone-800 outline-none file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground focus-visible:outline-none dark:text-stone-200"
             onInput={(e) => setTextAreaHeight(e.target as HTMLTextAreaElement)}
             onChange={(e) => onChange?.(e.target.value)}
