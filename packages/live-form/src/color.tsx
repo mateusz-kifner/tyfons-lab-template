@@ -61,6 +61,10 @@ export const getColorNameFromHex = (hex: string) => {
   return name;
 };
 
+function validateColorString(color_str: string) {
+  return tinycolor(color_str).isValid();
+}
+
 interface LiveFormColorProps extends LiveFormField<string | null> {
   style?: CSSProperties;
 }
@@ -73,7 +77,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
     disabled,
     required,
     // style,
-    leftSection = <IconColorSwatch />,
+    leftSection,
     rightSection,
     // keyName,
   } = useLiveFormContext(props);
@@ -163,13 +167,14 @@ const LiveFormColor = (props: LiveFormColorProps) => {
   //   }
   // }, [value]);
 
+  const color_without_alpha = `#${tinycolor(colorTextObj).toHex()}`;
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: This is intended to be focused with keyboard or mouse, no onPress needed
     <div
       className="flex-grow"
       // onClick={() => !disabled && setFocus(true)}
       // onFocus={() => !disabled && setFocus(true)}
-      // ref={ref}
+      ref={ref}
     >
       <Label label={label} copyValue={value} required={required} />
       <Popover open={open}>
@@ -183,7 +188,35 @@ const LiveFormColor = (props: LiveFormColorProps) => {
               //   : undefined,
             )}
           >
-            {!!leftSection && leftSection}
+            {leftSection ? (
+              leftSection
+            ) : (
+              <div className="relative flex h-6 w-6 rounded-full overflow-clip border border-black border-solid">
+                <div
+                  style={{
+                    background: "url('/assets/checkerboard.svg')",
+                    backgroundSize: "8px 8px",
+                  }}
+                  className="absolute inset-0"
+                />
+                <div
+                  style={{
+                    backgroundColor: color_without_alpha,
+                  }}
+                  className="z-10 h-6 w-3"
+                />
+                <div
+                  style={{
+                    backgroundColor: tinycolor(colorTextObj).toRgbString(),
+                  }}
+                  className="z-10 h-6 w-3 "
+                />
+                <div
+                  style={{ boxShadow: "inset 0px 0px 2px 4px #000" }}
+                  className="absolute -inset-1 z-20 rounded-full"
+                />
+              </div>
+            )}
             <input
               type="text"
               disabled={disabled}
@@ -196,6 +229,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
                 e.target.focus();
               }}
               onChange={(e) => setColorViaString(e.target.value)}
+              ref={inputRef}
               // {...moreProps}
             />
             {!!rightSection && rightSection}
@@ -206,7 +240,7 @@ const LiveFormColor = (props: LiveFormColorProps) => {
           container={ref.current}
           align="start"
           sideOffset={5}
-          className="w-[420px] overflow-hidden rounded border-gray-400 bg-stone-200 p-0 pb-3 shadow data-[state=open]:animate-show dark:border-sky-600 dark:bg-stone-800"
+          className="w-[392px] overflow-hidden rounded  bg-background shadow data-[state=open]:animate-show border-border p-0"
         >
           <ColorPicker value={color} onChange={setColorViaHSVObj} />
         </PopoverContent>
