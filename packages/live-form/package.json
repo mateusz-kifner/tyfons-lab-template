@@ -28,9 +28,9 @@
   "dependencies": {
     "@acme/ui": "workspace:*",
     "@mantine/hooks": "catalog:",
-    "@tiptap/core": "2.8.0",
+    "@tiptap/core": "2.9.0",
     "class-variance-authority": "0.7.0",
-    "tinycolor2": "^1.6.0"
+    "tinycolor2": "1.6.0"
   },
   "devDependencies": {
     "@acme/tailwind-config": "workspace:*",

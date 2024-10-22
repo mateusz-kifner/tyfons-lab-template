@@ -1,0 +1,45 @@
+{
+  "name": "@acme/email-templates",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.tsx"
+    },
+    "./env": "./env.ts"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "pnpm with-env tsc",
+    "dev": "pnpm with-env tsc --watch --preserveWatchOutput",
+    "clean": "rm -rf .turbo node_modules",
+    "format": "biome format ./src",
+    "lint": "biome lint ./src",
+    "dev:email": "pnpm with-env email dev --dir src --port 3001",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@react-email/components": "0.0.25",
+    "@react-email/render": "0.0.17",
+    "@t3-oss/env-nextjs": "catalog:",
+    "nodemailer": "6.9.15",
+    "react": "catalog:react18",
+    "react-dom": "catalog:react18",
+    "react-email": "2.1.6",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/tailwind-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/nodemailer": "6.4.16",
+    "@types/react": "catalog:react18",
+    "@types/react-dom": "catalog:react18",
+    "dotenv-cli": "catalog:",
+    "jiti": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}
