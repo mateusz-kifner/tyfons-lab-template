@@ -1,22 +1,27 @@
 {
-  "name": "@acme/db-graph-gen",
-  "version": "0.1.0",
+  "name": "@acme/db-erd-gen",
+  "private": true,
+  "version": "1.3.0",
+  "type": "module",
   "scripts": {
-    "generate": "cross-env SKIP_ENV_VALIDATION=1 node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts && dbml-renderer -i schema.dbml -o ../../docs/img/schema.svg",
+    "generate": "pnpm with-env node --experimental-specifier-resolution=node --loader ts-node/esm ./src/index.ts &&  dbml-renderer -i schema.dbml -o ../../docs/public/img/schema.svg",
+    "extract_groups": "pnpm with-env  node --experimental-specifier-resolution=node --loader ts-node/esm ./src/extract_groups.ts",
+    "gen_docs": "pnpm with-env  node --experimental-specifier-resolution=node --loader ts-node/esm ./src/generate_docs_entries.ts",
     "clean": "rm -rf .turbo node_modules",
     "format": "biome format ./src",
     "lint": "biome lint ./src",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ./.env --"
   },
   "devDependencies": {
-    "@acme/db": "workspace:*",
+    "@acme/server": "workspace:^",
     "@acme/tsconfig": "workspace:*",
     "@softwaretechnik/dbml-renderer": "1.0.30",
+    "@svgdotjs/svg.js": "3.2.4",
+    "@types/svgdom": "^0.1.2",
     "drizzle-dbml-generator": "0.9.0",
+    "svgdom": "^0.1.19",
     "ts-node": "10.9.2",
-    "typescript": "5.6.3"
-  },
-  "private": true,
-  "license": "MIT",
-  "type": "module"
+    "typescript": "5.6.2"
+  }
 }

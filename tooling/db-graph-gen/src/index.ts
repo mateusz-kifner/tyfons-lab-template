@@ -1,9 +1,9 @@
 export const name = "db-graph-gen";
 
-import * as schema from "@acme/db/schema";
+import { schemas } from "@acme/server";
 import { pgGenerate } from "drizzle-dbml-generator"; // Using Postgres for this example
 
 const out = "./schema.dbml";
 const relational = true;
 
-pgGenerate({ schema, out, relational });
+pgGenerate({ schema: schemas, out, relational });
