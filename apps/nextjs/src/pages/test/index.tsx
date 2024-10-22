@@ -16,6 +16,9 @@ import TestLiveForm from "@/test-components/live-form/test-virtual-form";
 import { useLocalStorage } from "@mantine/hooks";
 import { Button } from "@acme/ui/button";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
+import { ChangeLang } from "./change-lang";
+import type { CustomTypeOptions } from "i18next";
 
 const TestColor = dynamic(
   () => import("@/test-components/live-form/test-color"),
@@ -131,10 +134,13 @@ function LiveFormTestPage() {
     key: "debug",
     defaultValue: "false",
   });
+  const { t } = useTranslation();
 
   return (
     <div className="mx-auto flex min-h-screen max-w-screen-xl flex-col gap-4 p-2 pb-96">
       <div className="flex gap-4">
+        <ChangeLang />
+        <div>{t("Welcome")}</div>
         <ThemeToggle />
         <Button
           size="icon"

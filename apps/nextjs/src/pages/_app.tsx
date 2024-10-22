@@ -5,9 +5,16 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
 import { Toaster } from "@acme/ui/sonner";
 import useColorScheme from "@acme/ui/useColorScheme";
+import "../i18n";
+import i18n from "../i18n";
+import { useRouter } from "next/router";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   useColorScheme();
+  const router = useRouter();
+  if (router.locale !== undefined && router.locale !== i18n.language) {
+    i18n.changeLanguage(router.locale); // FIXME: this causes render mismatch error only on language change
+  }
 
   return (
     <div className="h-min-screen bg-popover text-foreground">
