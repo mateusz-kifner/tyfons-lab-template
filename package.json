@@ -25,7 +25,10 @@
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
     "db:gen-graph": "pnpm -F db-graph-gen generate",
-    "docs": "pnpm -F docs dev"
+    "docs:dev": "pnpm -F docs docs:dev",
+    "docs:start": "pnpm -F docs docs:start",
+    "docs:build": "pnpm -F docs docs:build",
+    "docs:preview": "pnpm -F docs docs:preview"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

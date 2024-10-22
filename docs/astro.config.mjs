@@ -6,7 +6,7 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "Tyfon's lab Template",
+      title: "Acme Template",
       social: {
         github: "https://github.com/withastro/starlight",
       },
