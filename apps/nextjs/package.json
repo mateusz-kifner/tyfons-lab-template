@@ -12,7 +12,8 @@
     "start": "pnpm with-env next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "test": "pnpm with-env pnpm playwright test"
+    "test:e2e": "pnpm with-env playwright test",
+    "test": "pnpm with-env vitest"
   },
   "dependencies": {
     "@acme/api": "workspace:*",
@@ -38,12 +39,18 @@
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
     "@playwright/test": "^1.48.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
     "@types/node": "20.16.13",
     "@types/react": "catalog:react18",
     "@types/react-dom": "catalog:react18",
+    "@vitejs/plugin-react": "^4.3.3",
     "dotenv-cli": "7.4.2",
     "jiti": "2.3.3",
+    "jsdom": "^25.0.1",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite-tsconfig-paths": "5.0.1",
+    "vitest": "^2.1.3"
   }
 }

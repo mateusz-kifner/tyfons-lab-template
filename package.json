@@ -19,6 +19,8 @@
     "lint:fix": "turbo lint --continue -- --write",
     "lint:fix-unsafe": "turbo lint --continue -- --write --unsafe",
     "lint:ws": "pnpm dlx sherif@latest",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "postinstall": "pnpm lint:ws",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add",
