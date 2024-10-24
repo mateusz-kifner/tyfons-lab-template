@@ -17,8 +17,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { Button } from "@acme/ui/button";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
-import { ChangeLang } from "./change-lang";
-import type { CustomTypeOptions } from "i18next";
+import { ChangeLang } from "../../components/change-lang";
 
 const TestColor = dynamic(
   () => import("@/test-components/live-form/test-color"),

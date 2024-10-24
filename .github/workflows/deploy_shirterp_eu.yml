@@ -1,0 +1,56 @@
+name: Deploy shirterp.eu
+
+on: [workflow_dispatch]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./
+
+    env:
+      CI: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set .env
+        run: |
+          echo "${{secrets.ENV_FILE}}" > .env
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: pnpm && pnpm build
+        run: |
+          node --version
+          pnpm
+          pnpm build
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          SOURCE: "."
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}/repo
+          EXCLUDE: "/node_modules/"
+      - name: Setup server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ${{ secrets.REMOTE_TARGET }}/repo
+            pnpm
+            cd ..
+            cp -r public_nodejs/uploads/ uploads
+            rm -dr public_nodejs
+            mv repo public_nodejs
+            rm -dr public_nodejs/uploads/
+            mv uploads/ public_nodejs/uploads
+            devil www restart ${{ secrets.HOST_URL }}

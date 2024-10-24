@@ -13,6 +13,7 @@
     "db:studio": "turbo -F @acme/db studio",
     "dev": "turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/nextjs...",
+    "start:next": "turbo watch start -F @acme/nextjs...",
     "format:mock": "turbo format --continue --",
     "format": "turbo format --continue -- --write",
     "lint": "turbo lint --continue --",
