@@ -427,9 +427,9 @@ function ShadCN() {
 
 export default ShadCN;
 
-export const getStaticProps: GetStaticProps = () => {
-  if (process.env.NODE_ENV === "production") {
-    return { notFound: true };
-  }
-  return { props: {} };
-};
+// export const getStaticProps: GetStaticProps = () => {
+//   if (process.env.NODE_ENV === "production") {
+//     return { notFound: true };
+//   }
+//   return { props: {} };
+// };

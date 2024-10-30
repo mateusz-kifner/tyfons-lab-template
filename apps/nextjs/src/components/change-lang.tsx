@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@acme/ui/button";
 import { useRouter } from "next/router";
 
